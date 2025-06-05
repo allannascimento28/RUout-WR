@@ -19,7 +19,7 @@ const PreIncidentLinks = () => {
     return (
         <View style={styles.screen}>
             <CustomHeader title="Pre Incident Links" />
-            <ScrollView>
+            <ScrollView style={{paddingHorizontal: 16}}>
             <View style={styles.card}>
                 <Text style={styles.stepTitle}>STEP 1</Text>
                 <Text style={styles.description}>
@@ -67,48 +67,47 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         backgroundColor: '#fff',
-        paddingHorizontal: scale(16),
-        paddingTop: verticalScale(16),
+        // paddingTop: 16,
     },
     card: {
         backgroundColor: '#f9f9f9',
-        borderRadius: scale(30),
+        borderRadius: 30,
         borderWidth: 1,
         borderColor: '#E4E7EC',
-        padding: moderateScale(16),
-        marginVertical: verticalScale(8),
+        padding: 16,
+        marginVertical: 8,
         elevation: 3
     },
     stepTitle: {
-        fontSize: moderateScale(18),
+        fontSize: 18,
         fontFamily: 'Manrope-Bold',
         color: '#3392CC', 
-        marginBottom: verticalScale(8),
+        marginBottom: 8,
     },
     description: {
-        fontSize: moderateScale(14),
+        fontSize: 14,
         fontFamily: 'Manrope-SemiBold',
         color: '#363636',
-        marginBottom: verticalScale(16),
+        marginBottom: 16,
     },
     downloadButton: {
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: '#DFF0FF',
-        paddingVertical: verticalScale(10),
-        paddingHorizontal: scale(14),
-        borderRadius: scale(30),
+        paddingVertical: 10,
+        paddingHorizontal: 14,
+        borderRadius: 30,
         alignSelf: 'flex-start',
         width: '100%',
         elevation: 2
     },
     buttonText: {
         color: '#3392CC',
-        fontSize: moderateScale(14),
+        fontSize: 14,
         fontFamily: 'Manrope-Bold',
-        marginLeft: scale(8),
+        marginLeft: 8,
     },
     icon: {
-        marginRight: scale(4),
+        marginRight: 4,
     },
 });

@@ -1,13 +1,14 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
+  Login: undefined;
   Tabs: undefined;
-  Instructions: undefined;
+  Instructions: { incidentId: string };
   IndicateTypes: undefined;
-  Refusals: undefined;
-  PersonWithDisability: undefined;
-  SignOfDanger: undefined;
-  AdditionalDetails: undefined;
+  Refusals: { incidentId?: string };
+  PersonWithDisability: { incidentId?: string };
+  SignOfDanger: { incidentId?: string };
+  AdditionalDetails: { incidentId?: string };
   MediaFiles: undefined;
   InstructionLink: undefined;
   ResponseHandout: undefined;

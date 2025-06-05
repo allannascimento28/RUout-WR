@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Dimensions, KeyboardTypeOptions } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 interface CustomInputProps {
@@ -9,6 +9,9 @@ interface CustomInputProps {
     onChangeText?: (text: string) => void;
     placeholder?: string;
     style?: any;
+    errorMessage?: string;
+    keyboardType?: KeyboardTypeOptions | undefined;
+    multiline?: boolean;
 }
 
 const CustomInput = ({
@@ -17,42 +20,68 @@ const CustomInput = ({
     value,
     onChangeText,
     placeholder,
-    style
+    style,
+    errorMessage = '',
+    keyboardType = 'default'
 }: CustomInputProps) => {
     return (
         <View style={[styles.container, style]}>
             <Text style={styles.label}>{label}</Text>
             <TextInput
-                style={styles.input}
+                style={ styles.input}
                 numberOfLines={numberOfLines}
                 value={value}
                 onChangeText={onChangeText}
                 placeholder={placeholder}
                 multiline
+                keyboardType={keyboardType}
             />
+            {errorMessage && (
+                <Text style={styles.errorText}>{errorMessage}</Text>
+            )}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: verticalScale(16),
+        marginBottom: 16,
     },
     label: {
-        fontSize: scale(16),
+        fontSize: 16,
         color: '#363636',
-        marginBottom: verticalScale(8),
+        marginBottom: 8,
         fontFamily: 'Manrope-Medium',
-        marginLeft: moderateScale(5),
+        marginLeft: 5,
     },
     input: {
         backgroundColor: '#E3E6EB',
-        borderRadius: moderateScale(50),
-        paddingVertical: verticalScale(10),
-        paddingHorizontal: moderateScale(12),
-        fontSize: scale(16),
+        borderRadius: 50,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        fontSize: 16,
         fontFamily: 'Manrope-Medium',
         color: '#363636',
+        borderBottomWidth: 2,
+        borderBottomColor: '#E3E6EB',
+    },
+    invalidInput: {
+        backgroundColor: '#E3E6EB',
+        borderRadius: 50,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        fontSize: 16,
+        fontFamily: 'Manrope-Medium',
+        color: '#363636',
+        borderBottomWidth: 2,
+        borderBottomColor: '#FF0000',
+    },
+    errorText: {
+        color: '#FF0000',
+        fontSize: 10,
+        marginTop: 4,
+        marginLeft: 10,
+        fontFamily: 'Manrope-Medium',
     },
 });
 

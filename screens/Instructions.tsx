@@ -23,8 +23,9 @@ import FireImage from '../assets/images/fire.png';
 import EditImage from '../assets/images/edit.png';
 import MediaImage from '../assets/images/media.png';
 
-const Instructions = () => {
+const Instructions = ({ route }: { route: any }) => {
     const navigation = useNavigation<RootStackNavigation>();
+    const incidentId = route.params?.incidentId;
 
     const listItem = [
         {
@@ -43,25 +44,25 @@ const Instructions = () => {
         {
             title: 'All Clear',
             image: TickImage,
-            onPress: () => navigation.navigate('Refusals'),
+            onPress: () => navigation.navigate('Refusals', { incidentId : incidentId }),
             colour: '#FF1C1C',
         },
         {
             title: 'Refusals',
             image: CrossImage,
-            onPress: () => navigation.navigate('Refusals'),
+            onPress: () => navigation.navigate('Refusals', { incidentId: incidentId }),
             colour: '#fe8d8d',
         },
         {
             title: 'Person with a Disability',
             image: WheelChairImage,
-            onPress: () => navigation.navigate('PersonWithDisability'),
+            onPress: () => navigation.navigate('PersonWithDisability', { incidentId: incidentId }),
             colour: '#fe8d8d',
         },
         {
             title: 'Is there any Sign of Danger?',
             image: FireImage,
-            onPress: () => navigation.navigate('SignOfDanger'),
+            onPress: () => navigation.navigate('SignOfDanger', { incidentId: incidentId }),
             colour: '#fe8d8d',
         },
     ]
@@ -90,7 +91,7 @@ const Instructions = () => {
                 {listItem.map((item, index) => (
                     <TouchableOpacity
                         key={index}
-                        onPress={() => navigation.navigate(item.route)}
+                        onPress={() => navigation.navigate(item.route, {incidentId : incidentId})}
                         style={styles.belowContainer}
                     >
                         <View style={styles.imageContainer}>
@@ -118,46 +119,49 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         flex: 1,
+        flexGrow: 1,
         marginBottom: 10,
+        paddingHorizontal: 16,
+        // justifyContent: 'space-between',
     },
     container: {
-        borderRadius: scale(20),
+        borderRadius: 20,
         borderWidth: 1,
         borderColor: '#E4E7EC',
-        padding: moderateScale(16),
+        padding: 16,
         backgroundColor: '#f9f9f9',
-        marginTop: verticalScale(1),
+        marginTop: 1,
         justifyContent: 'flex-start',
-        marginBottom: verticalScale(13),
+        marginBottom: 13,
     },
     belowContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderRadius: scale(15),
+        borderRadius: 15,
         borderWidth: 1,
         borderColor: '#E4E7EC',
-        paddingHorizontal: moderateScale(12),
-        paddingVertical: verticalScale(12),
+        paddingHorizontal: 12,
+        paddingVertical: 12,
         backgroundColor: '#f9f9f9',
-        marginTop: verticalScale(1),
-        marginBottom: verticalScale(8),
+        marginTop: 1,
+        marginBottom: 8,
     },
     image: {
-        width: scale(18),
-        height: scale(18),
+        width: 18,
+        height: 18,
         resizeMode: 'contain',
-        borderRadius: scale(3),
+        borderRadius: 3,
     },
     imageContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginRight: scale(16),
+        marginRight: 16,
     },
     title: {
-        marginLeft: scale(5),
-        fontSize: moderateScale(14),
+        marginLeft: 5,
+        fontSize: 14,
         fontFamily: 'Manrope-Bold',
         color: '#363636',
     },
@@ -169,36 +173,39 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        marginTop: verticalScale(10),
+        marginTop: 10,
     },
     yesButton: {
         flex: 1,
         backgroundColor: '#FF1C1C',
-        paddingVertical: verticalScale(8),
-        borderRadius: scale(12),
-        marginRight: scale(8),
+        paddingVertical: 8,
+        borderRadius: 12,
+        marginRight: 8,
         alignItems: 'center',
         justifyContent: 'center',
     },
     noButton: {
         flex: 1,
         backgroundColor: '#34C75980',
-        paddingVertical: verticalScale(8),
-        borderRadius: scale(12),
-        marginLeft: scale(8),
+        paddingVertical: 8,
+        borderRadius: 12,
+        marginLeft: 8,
         alignItems: 'center',
         justifyContent: 'center',
     },
     buttonText: {
         color: 'white',
-        fontSize: moderateScale(13),
+        fontSize: 13,
         fontFamily: 'Manrope-Bold',
     },
     submitButton: {
-        position: 'absolute',
-        bottom: verticalScale(20),
-        left: moderateScale(16),
-        right: moderateScale(16),
+        // position: 'absolute',
+        // bottom: verticalScale(20),
+        // left: moderateScale(16),
+        // right: moderateScale(16),
+        marginTop: 24,
+        // marginBottom: verticalScale(40),
+        // paddingHorizontal: moderateScale(16),
     },
 });
 

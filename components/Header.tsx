@@ -1,19 +1,31 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, useWindowDimensions } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { scale } from 'react-native-size-matters';
+import { scale, moderateScale } from 'react-native-size-matters';
 
 const Header = () => {
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  
+  // Screen size breakpoints
+  const isLargeScreen = width > 768;
+  const isExtraLargeScreen = width > 1200;
   
   return (
     <SafeAreaView style={[styles.safeArea]}>
       <View style={styles.header}>
         {/* Center Text */}
-        <Text style={styles.headerText}>Save Time Save Life</Text>
+        <Text style={styles.headerText}>Save Time, Save Life</Text>
 
-        {/* Bottom-left Logo */}
-        <Image source={require('../assets/LOGO.png')} style={styles.logo} />
+        {/* Bottom-left Logo with responsive sizing */}
+        <Image 
+          source={require('../assets/LOGO.png')} 
+          style={[
+            styles.logo,
+            isLargeScreen && styles.largeLogo,
+            isExtraLargeScreen && styles.extraLargeLogo
+          ]} 
+        />
       </View>
     </SafeAreaView>
   );
@@ -35,11 +47,12 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
   },
   headerText: {
-    color: '#007AFF',
+    color: '#3392CC',
     fontSize: 14,
     fontFamily: 'Manrope-Bold',
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: -20,
   },
   logo: {
     width: scale(50),
@@ -50,6 +63,18 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     zIndex: 1,
     marginTop: scale(20),
+  },
+  // Responsive styles for large screens
+  largeLogo: {
+    width: scale(60),
+    height: scale(60),
+    left: scale(20),
+  },
+  // Fixed size for extra large screens
+  extraLargeLogo: {
+    width: 65,
+    height: 65,
+    left: 30,
   },
 });
 

@@ -16,6 +16,9 @@ import AudioRecorder from '../components/AudioRecorder';
 import ImageUploader from '../components/ImageUploader';
 import CustomHeader from '../components/CustomHeader';
 import { scale, verticalScale } from 'react-native-size-matters';
+import axios from 'axios';
+import { BASE_URL } from '../config';
+import { useAuth } from '../context/AuthContext';
 
 interface AudioRecording {
   uri: string;
@@ -24,8 +27,10 @@ interface AudioRecording {
   duration: number;
 }
 
-const MediaFiles: React.FC = () => {
+const MediaFiles: React.FC<{route: any}> = ({route}) => {
   const navigation = useNavigation();
+  const incidentId = route.params?.incidentId;
+  const {authToken} = useAuth();
   const [showRecorder, setShowRecorder] = useState(false);
   const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
   const [playingSound, setPlayingSound] = useState<Audio.Sound | null>(null);
@@ -52,6 +57,7 @@ const MediaFiles: React.FC = () => {
       duration,
     };
     setAudioRecordings(prev => [...prev, newRecording]);
+    handleAPICall();
   };
 
   const deleteRecording = (index: number) => {
@@ -123,6 +129,77 @@ const MediaFiles: React.FC = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const audioRecordingToBlob = async (recording: AudioRecording): Promise<Blob> => {
+    const response = await fetch(recording.uri);
+    return await response.blob();
+  };
+
+//   const handleAPICall =async () => {
+//     // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzI1NTk3MjAzYTBmYjIyNzc4ZmFmMiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0ODEzMjU2M30.JhQaUrq8woPnyRXwrw2gV70HtwhP3XcIhsAlzj1i10w"
+//     const token = authToken;
+//     try{
+
+//     const formData = new FormData();
+//     formData.append("media[status]", "true");
+//     for (const recording of audioRecordings) {
+//       const blob = await audioRecordingToBlob(recording);
+//       formData.append('media[record]', blob, recording.name);
+//     }
+
+//     const response = await axios.put(`${BASE_URL}/user/incident-type/683650cccdfa52a1340ff3de`, formData, {
+//       headers: {
+//         Authorization: `Bearer ${token}`,
+//         "Content-Type": "multipart/form-data"
+//       }
+
+//     });
+//     console.log("response is here for additional details:: ", response.data)
+
+//   }catch(error){
+//     console.log("Error in additional details is  :: ", error)
+//   }
+// }
+
+const handleAPICall = async () => {
+  const token = authToken;
+
+  try {
+    const formData = new FormData();
+    formData.append("media[status]", "true");
+
+    for (const recording of audioRecordings) {
+      formData.append('media[record][]', {
+        uri: recording.uri,
+        type: 'audio/x-wav', // or 'audio/m4a', adjust based on your recorder output
+        name: recording.name,
+      });
+    }
+
+    const response = await axios.put(
+      `${BASE_URL}/user/incident-type/${incidentId}`,
+      formData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log("Media files saved successfully");
+      setAudioRecordings([]);
+      Alert.alert("Success", "Media files saved successfully", [
+        { text: "OK", onPress: () => navigation.goBack() }
+      ]);
+    }
+
+    console.log("response is here for additional details:: ", response.data);
+  } catch (error) {
+    console.log("Error in additional details is  :: ", error.response?.data || error.message);
+  }
+};
+
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
@@ -188,7 +265,7 @@ const MediaFiles: React.FC = () => {
         {/* Image Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Images</Text>
-          <ImageUploader />
+          <ImageUploader incidentId={incidentId} authToken={authToken} />
         </View>
       </ScrollView>
 
@@ -213,7 +290,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   section: {
-    marginTop: verticalScale(10),
+    marginTop: 10,
   },
   sectionTitle: {
     fontSize: 16,
@@ -226,12 +303,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#F3F4F6',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: scale(25),
-    paddingHorizontal: scale(24),
-    paddingVertical: verticalScale(12),
+    borderRadius: 25,
+    paddingHorizontal: 25,
+    paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: scale(16),
+    marginBottom: 16,
     fontFamily: 'Manrope-Regular',
   },
   recordButtonText: {
@@ -240,14 +317,14 @@ const styles = StyleSheet.create({
     color: '#6B7280',
   },
   recordingsList: {
-    gap: scale(12),
+    gap: 12,
   },
   recordingItem: {
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: scale(8),
-    padding: scale(16),
+    borderRadius: 8,
+    padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
@@ -258,7 +335,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: scale(12),
+    marginBottom: 12,
   },
   recordingInfo: {
     flex: 1,
@@ -267,7 +344,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: '#1F2937',
-    marginBottom: scale(4),
+    marginBottom: 4,
   },
   recordingTime: {
     fontSize: 12,
@@ -280,9 +357,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#EBF4FF',
-    paddingHorizontal: scale(12),
-    paddingVertical: scale(8),
-    borderRadius: scale(6),
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 6,
     alignSelf: 'flex-start',
   },
 });

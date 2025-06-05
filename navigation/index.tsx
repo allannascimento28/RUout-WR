@@ -3,9 +3,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
-import Octicons from '@expo/vector-icons/Octicons';
-import Fontisto from '@expo/vector-icons/Fontisto';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Octicons from "@expo/vector-icons/Octicons";
+import Fontisto from "@expo/vector-icons/Fontisto";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Header from "../components/Header";
@@ -24,7 +24,7 @@ import MediaFiles from "../screens/MediaFiles";
 import InstructionLink from "../screens/InstructionLink";
 import ResponseHandout from "../screens/ResponseHandout";
 import ResponseVideos from "../screens/ResponseVideos";
-import SafeAtWork from '../screens/SafeAtWork';
+import SafeAtWork from "../screens/SafeAtWork";
 import WatchScreen from "../screens/WatchScreen";
 import EvacuateNow from "../screens/EvacuateNow";
 import ShelterInPlace from "../screens/ShelterInPlace";
@@ -32,6 +32,9 @@ import ManualInstruction from "../screens/ManualInstruction";
 import PreparetoLeave from "../screens/PreparetoLeave";
 import AssemblyArea from "../screens/AssemblyArea";
 import PersonWithDisability from "../screens/PersonWithDisability";
+import Login from "../screens/Login";
+import { useAuth } from "../context/AuthContext";
+import { StatusBar } from "expo-status-bar";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
@@ -60,36 +63,40 @@ const TabNavigator = () => {
         tabBarInactiveTintColor: "gray",
       })}
     >
-      <Tab.Screen 
-        name="Home" 
-        component={Home} 
+      <Tab.Screen
+        name="Home"
+        component={Home}
         options={{
           tabBarIcon: ({ focused, size, color }) => (
             <Octicons name="home" size={size} color={color} />
           ),
         }}
       />
-      <Tab.Screen 
-        name="Assembly Area" 
-        component={IndicateTypes} 
+      <Tab.Screen
+        name="Assembly Area"
+        component={IndicateTypes}
         options={{
           tabBarIcon: ({ focused, size, color }) => (
-            <MaterialIcons name="stacked-line-chart" size={size} color={color} />
+            <MaterialIcons
+              name="stacked-line-chart"
+              size={size}
+              color={color}
+            />
           ),
         }}
       />
-      <Tab.Screen 
-        name="Links" 
-        component={PreIncidentLinks} 
+      <Tab.Screen
+        name="Links"
+        component={PreIncidentLinks}
         options={{
           tabBarIcon: ({ focused, size, color }) => (
             <Fontisto name="link" size={size} color={color} />
           ),
         }}
       />
-      <Tab.Screen 
-        name="Watch" 
-        component={WatchScreen} 
+      <Tab.Screen
+        name="Watch"
+        component={WatchScreen}
         options={{
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialIcons name="volume-up" size={size} color={color} />
@@ -101,17 +108,29 @@ const TabNavigator = () => {
 };
 
 const StackNavigator = () => {
+  const { authToken } = useAuth();
   return (
     <Stack.Navigator
+      // initialRouteName= {!authToken ? "Login" : "Tabs"}
       screenOptions={{
         header: () => <Header />,
       }}
     >
+      {/* {authToken ? ( */}
       <Stack.Screen
-        name="Tabs"
-        component={TabNavigator}
-        options={{ headerShown: false }}
-      />
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Tabs"
+          component={TabNavigator}
+          options={{ headerShown: false }}
+        />
+      {/* // ) : ( */}
+        
+      {/* // )} */}
+
       <Stack.Screen
         name="Instructions"
         component={Instructions}
@@ -203,7 +222,7 @@ const StackNavigator = () => {
         name="SafeAtWork"
         component={SafeAtWork}
         options={{
-          headerShown: true,
+          headerShown: false,
           title: "Safe At Work",
         }}
       />
@@ -212,7 +231,7 @@ const StackNavigator = () => {
         name="EvacuateNow"
         component={EvacuateNow}
         options={{
-          headerShown: true,
+          headerShown: false,
           title: "Evacuate Now",
         }}
       />
@@ -221,7 +240,7 @@ const StackNavigator = () => {
         name="ShelterInPlace"
         component={ShelterInPlace}
         options={{
-          headerShown: true,
+          headerShown: false,
           title: "Shelter In Place",
         }}
       />
@@ -230,7 +249,7 @@ const StackNavigator = () => {
         name="PreparetoLeave"
         component={PreparetoLeave}
         options={{
-          headerShown: true,
+          headerShown: false,
           title: "Prepare to Leave",
         }}
       />
@@ -239,11 +258,10 @@ const StackNavigator = () => {
         name="ManualInstruction"
         component={ManualInstruction}
         options={{
-          headerShown: true,
+          headerShown: false,
           title: "Manual Instruction",
         }}
       />
-
     </Stack.Navigator>
   );
 };
@@ -251,6 +269,11 @@ const StackNavigator = () => {
 const AppNavigator = () => {
   return (
     <NavigationContainer>
+      <StatusBar 
+        style="auto"
+        backgroundColor="#fff"
+        translucent={false}
+      />
       <StackNavigator />
     </NavigationContainer>
   );

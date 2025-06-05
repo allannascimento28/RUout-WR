@@ -33,16 +33,16 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         backgroundColor: '#fff',
-        paddingHorizontal: scale(16),
-        paddingTop: verticalScale(16),
+        paddingHorizontal: 16,
+        paddingTop: 16,
     },
     card: {
         backgroundColor: '#fff',
         borderColor: '#ccc',
         borderWidth: 1,
-        borderRadius: scale(12),
-        padding: moderateScale(12),
-        marginTop: verticalScale(12),
+        borderRadius: 12,
+        padding: 12,
+        marginTop: 12,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -51,18 +51,18 @@ const styles = StyleSheet.create({
     title: {
         color: '#2D2D2D',
         flex: 1,
-        fontSize: moderateScale(16),
+        fontSize: 16,
         fontWeight: '600',
         fontFamily: 'Manrope-SemiBold',
        
     },
     blackText: {
-        fontSize: moderateScale(14),
+        fontSize: 14,
         color: '#000',
         fontFamily: 'Manrope-Regular',
     },
     blueText: {
-        fontSize: moderateScale(14),
+        fontSize: 14,
         color: '#3392CC',
         fontFamily: 'Manrope-Regular',
     },
@@ -72,6 +72,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     icon: {
-        marginRight: scale(6),
+        marginRight: 16,
     },
 });

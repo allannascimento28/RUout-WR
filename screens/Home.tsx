@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   content: {
-    marginTop: 40,
+    // marginTop: 40,
   },
   title: {
     color: '#3392CC',
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     backgroundColor: '#CACACA',
-    marginBottom: verticalScale(24),
+    marginBottom: 24,
   },
   termsLabel: {
     fontSize: 18,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   activateButton:{
     backgroundColor: '#F9980D',
-    paddingVertical: scale(16),
+    paddingVertical: 14,
     borderRadius: scale(30),
     alignItems: 'center', 
     justifyContent: 'center',

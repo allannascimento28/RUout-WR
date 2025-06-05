@@ -26,16 +26,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingHorizontal: scale(20),
-        paddingVertical: verticalScale(12),
+        paddingHorizontal: 20,
+        paddingVertical: 12,
         borderRadius: 30,
-        gap: scale(10),
+        gap: 10,
         width:'100%'
         
     },
     buttonText: {
         color: '#fff',
-        fontSize: moderateScale(16),
+        fontSize: 16,
         fontFamily: 'Manrope-Bold',
     },
 });

@@ -43,33 +43,33 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         backgroundColor: '#fff',
-        paddingHorizontal: scale(16),
-        paddingTop: verticalScale(16),
+        paddingHorizontal: 16,
+        paddingTop: 16,
     },
     card: {
         backgroundColor: '#DFF0FF', 
-        borderRadius: scale(30),
+        borderRadius: 30,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: moderateScale(12),
-        marginTop: verticalScale(12),
+        padding: 12,
+        marginTop: 12,
     },
     cardContent: {
         flexDirection: 'row',
         alignItems: 'center',
     },
     icon: {
-        marginRight: scale(10),
+        marginRight: 10,
     },
     cardText: {
-        fontSize: moderateScale(15),
+        fontSize: 15,
         color: '#3392CC', 
         fontFamily: 'Manrope-SemiBold',
     },
     arrowContainer: {
         backgroundColor: '#3392CC',
-        borderRadius: scale(40),
-        padding: scale(8),
+        borderRadius: 40,
+        padding: 8,
     },
 });

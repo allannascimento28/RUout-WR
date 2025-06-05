@@ -24,15 +24,15 @@ export default CustomButton;
 const styles = StyleSheet.create({
     button: {
         backgroundColor: '#3392CC', 
-        paddingHorizontal: moderateScale(20),
-        paddingVertical: verticalScale(12),
-        borderRadius: moderateScale(30), 
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        borderRadius: 30, 
         alignItems: 'center',
         justifyContent: 'center',
     },
     buttonText: {
         color: '#F6FDFF',
-        fontSize: moderateScale(16),
+        fontSize: 16,
         fontFamily: 'Manrope-Bold',
     },
 })
