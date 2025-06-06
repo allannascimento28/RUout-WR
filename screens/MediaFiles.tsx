@@ -28,11 +28,12 @@ interface AudioRecording {
 }
 
 const MediaFiles: React.FC<{route: any}> = ({route}) => {
+
+  const {data, setData, onComplete } = route.params;
   const navigation = useNavigation();
   const incidentId = route.params?.incidentId;
-  const {authToken} = useAuth();
   const [showRecorder, setShowRecorder] = useState(false);
-  const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
+  // const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
   const [playingSound, setPlayingSound] = useState<Audio.Sound | null>(null);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
 
@@ -52,12 +53,15 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
   const handleSaveRecording = (uri: string, duration: number) => {
     const newRecording: AudioRecording = {
       uri,
-      name: `Recording ${audioRecordings.length + 1}`,
+      name: `Recording ${data.audioRecordings?.length + 1}`,
       timestamp: new Date(),
       duration,
     };
-    setAudioRecordings(prev => [...prev, newRecording]);
-    handleAPICall();
+    // setAudioRecordings(prev => [...prev, newRecording]);
+    // handleAPICall();
+    setData({ ...data, audioRecordings: [...data.audioRecordings, newRecording] });
+    onComplete?.();
+    navigation.goBack();
   };
 
   const deleteRecording = (index: number) => {
@@ -70,7 +74,9 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            setAudioRecordings(prev => prev.filter((_, i) => i !== index));
+            setData({ ...data, audioRecordings: data.audioRecordings?.filter((_, i) => i !== index) });
+            onComplete?.();
+            navigation.goBack();
           }
         }
       ]
@@ -160,44 +166,44 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
 //   }
 // }
 
-const handleAPICall = async () => {
-  const token = authToken;
+// const handleAPICall = async () => {
+//   const token = authToken;
 
-  try {
-    const formData = new FormData();
-    formData.append("media[status]", "true");
+//   try {
+//     const formData = new FormData();
+//     formData.append("media[status]", "true");
 
-    for (const recording of audioRecordings) {
-      formData.append('media[record][]', {
-        uri: recording.uri,
-        type: 'audio/x-wav', // or 'audio/m4a', adjust based on your recorder output
-        name: recording.name,
-      });
-    }
+//     for (const recording of audioRecordings) {
+//       formData.append('media[record][]', {
+//         uri: recording.uri,
+//         type: 'audio/x-wav', // or 'audio/m4a', adjust based on your recorder output
+//         name: recording.name,
+//       });
+//     }
 
-    const response = await axios.put(
-      `${BASE_URL}/user/incident-type/${incidentId}`,
-      formData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    if (response.status === 200) {
-      console.log("Media files saved successfully");
-      setAudioRecordings([]);
-      Alert.alert("Success", "Media files saved successfully", [
-        { text: "OK", onPress: () => navigation.goBack() }
-      ]);
-    }
+//     const response = await axios.put(
+//       `${BASE_URL}/user/incident-type/${incidentId}`,
+//       formData,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "multipart/form-data",
+//         },
+//       }
+//     );
+//     if (response.status === 200) {
+//       console.log("Media files saved successfully");
+//       setAudioRecordings([]);
+//       Alert.alert("Success", "Media files saved successfully", [
+//         { text: "OK", onPress: () => navigation.goBack() }
+//       ]);
+//     }
 
-    console.log("response is here for additional details:: ", response.data);
-  } catch (error) {
-    console.log("Error in additional details is  :: ", error.response?.data || error.message);
-  }
-};
+//     console.log("response is here for additional details:: ", response.data);
+//   } catch (error) {
+//     console.log("Error in additional details is  :: ", error.response?.data || error.message);
+//   }
+// };
 
 
   return (
@@ -265,7 +271,7 @@ const handleAPICall = async () => {
         {/* Image Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Images</Text>
-          <ImageUploader incidentId={incidentId} authToken={authToken} />
+          <ImageUploader incidentId={incidentId} />
         </View>
       </ScrollView>
 

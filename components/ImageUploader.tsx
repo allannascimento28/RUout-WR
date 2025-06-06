@@ -449,10 +449,10 @@ interface ImageData {
 
 interface ImageUploaderProps {
   incidentId: string;
-  authToken: string;
 }
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ incidentId, authToken }) => {
+const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
+
   const [images, setImages] = useState<ImageData[]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [showUploadOptions, setShowUploadOptions] = useState(false);
@@ -475,7 +475,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ incidentId, authToken }) 
 
   const uploadSingleImage = async (imageData: ImageData) => {
     // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzI1NTk3MjAzYTBmYjIyNzc4ZmFmMiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0ODEzMjU2M30.JhQaUrq8woPnyRXwrw2gV70HtwhP3XcIhsAlzj1i10w";
-    const token = authToken;
+    // const token = authToken;
     try {
       // Set uploading state
       setImages(prev => 
@@ -497,7 +497,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ incidentId, authToken }) 
         formData, 
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            // Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data"
           }
         }
