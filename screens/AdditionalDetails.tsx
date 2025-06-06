@@ -9,9 +9,8 @@ import { BASE_URL } from "../config";
 import { useAuth } from "../context/AuthContext";
 
 const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any }) => {
-
-  const {authToken} = useAuth();
-  const incidentId = route.params?.incidentId;
+  const {data, setData, onComplete } = route.params;
+ 
   const [notes, setNotes] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -20,40 +19,39 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
     setErrorMessage('');
   }
 
-  const handleAPICall =async () => {
-    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzI1NTk3MjAzYTBmYjIyNzc4ZmFmMiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0ODEzMjU2M30.JhQaUrq8woPnyRXwrw2gV70HtwhP3XcIhsAlzj1i10w"
-    const token = authToken;
-    try{
+  // const handleAPICall =async () => {
+  //   const token = authToken;
+  //   try{
 
-    const formData = new FormData();
-    formData.append("additional[status]", "true");
-    formData.append("additional[notes]", notes);     
+  //   const formData = new FormData();
+  //   formData.append("additional[status]", "true");
+  //   formData.append("additional[notes]", notes);     
 
 
-    const response = await axios.put(`${BASE_URL}/user/incident-type/${incidentId}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data"
-      }
+  //   const response = await axios.put(`${BASE_URL}/user/incident-type/${incidentId}`, formData, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //       "Content-Type": "multipart/form-data"
+  //     }
 
-    });
+  //   });
 
-    if( response.status === 200) {
-      console.log("Additional details saved successfully");
-      setNotes('');
-      setErrorMessage('');
-      Alert.alert("Success", "Additional details saved successfully", [
-        { text: "OK", onPress: () => {
-          navigation.goBack()
-        }}
-      ]);
-    }
-    console.log("response is here for additional details:: ", response.data)
+  //   if( response.status === 200) {
+  //     console.log("Additional details saved successfully");
+  //     setNotes('');
+  //     setErrorMessage('');
+  //     Alert.alert("Success", "Additional details saved successfully", [
+  //       { text: "OK", onPress: () => {
+  //         navigation.goBack()
+  //       }}
+  //     ]);
+  //   }
+  //   console.log("response is here for additional details:: ", response.data)
 
-    }catch(error){
-      console.log("Error in additional details is  :: ", error)
-    }
-  }
+  //   }catch(error){
+  //     console.log("Error in additional details is  :: ", error)
+  //   }
+  // }
 
   const handleSave = () => {
     if (notes.trim() === '') {
@@ -61,7 +59,10 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
       return;
     }
     // Keyboard.dismiss();
-    handleAPICall();
+    // handleAPICall();
+    setData({ notes });
+    onComplete?.();
+    navigation.goBack();
     console.log("handle save: ", notes);
   }
 

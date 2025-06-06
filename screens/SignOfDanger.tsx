@@ -12,8 +12,8 @@ import { useNavigation } from "@react-navigation/native";
 
 const SignOfDanger = ({ route }: { route: any }) => {
   const navigation = useNavigation();
-  const {authToken} = useAuth();
-  const incidentId = route.params?.incidentId;
+  const {data, setData, onComplete } = route.params;
+
   const [signOfDanger, setSignOfDanger] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -22,39 +22,39 @@ const SignOfDanger = ({ route }: { route: any }) => {
     setErrorMessage('');
   }
 
-  const handleAPICall =async () => {
-    const token = authToken;
-    try{
+  // const handleAPICall =async () => {
+  //   const token = authToken;
+  //   try{
 
-    const formData = new FormData();
-    formData.append("sign_of_danger[status]", "true");
-    formData.append("sign_of_danger[sign_of_danger]", signOfDanger);     
+  //   const formData = new FormData();
+  //   formData.append("sign_of_danger[status]", "true");
+  //   formData.append("sign_of_danger[sign_of_danger]", signOfDanger);     
 
 
-    const response = await axios.put(`${BASE_URL}/user/incident-type/${incidentId}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data"
-      }
+  //   const response = await axios.put(`${BASE_URL}/user/incident-type/${incidentId}`, formData, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //       "Content-Type": "multipart/form-data"
+  //     }
 
-    });
-    if( response.status === 200) {
-      console.log("Sign of danger saved successfully");
-      setSignOfDanger('');
-      setErrorMessage('');
-      Alert.alert("Success", "Sign of danger saved successfully", [
-        { text: "OK", onPress: () => {
-          navigation.goBack()
-        }}
-      ]);
-    }
-    console.log("response is here for danger:: ", response.data)
+  //   });
+  //   if( response.status === 200) {
+  //     console.log("Sign of danger saved successfully");
+  //     setSignOfDanger('');
+  //     setErrorMessage('');
+  //     Alert.alert("Success", "Sign of danger saved successfully", [
+  //       { text: "OK", onPress: () => {
+  //         navigation.goBack()
+  //       }}
+  //     ]);
+  //   }
+  //   console.log("response is here for danger:: ", response.data)
     
 
-    }catch(error){
-      console.log("Error in refusal is  :: ", error)
-    }
-  }
+  //   }catch(error){
+  //     console.log("Error in refusal is  :: ", error)
+  //   }
+  // }
 
   const handleSave = () => {
     if (signOfDanger.trim() === '') {
@@ -62,7 +62,11 @@ const SignOfDanger = ({ route }: { route: any }) => {
       return;
     }
     // Keyboard.dismiss();
-    handleAPICall();
+    // handleAPICall();
+
+    setData({ signOfDanger });
+    onComplete?.();
+    navigation.goBack();
     console.log("handle save: ", signOfDanger);
   }
 
