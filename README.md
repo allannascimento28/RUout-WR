@@ -99,6 +99,12 @@ ruoutwar-app/
 - **Device Permissions**: The app requires camera, microphone, and storage permissions. Make sure to grant these when prompted.
 
 - **Metro Bundler Connection**: If your device can't connect to Metro Bundler, make sure your device and computer are on the same network.
+- **Web Build, CLI related issue**:  Reinstall expo cli
+```bash
+npm uninstall -g expo-cli
+npm install -g @expo/cli
+```
+
 
 ## Running on Specific Platforms
 
@@ -117,4 +123,42 @@ For web:
 npm run web
 ```
 
-Note: Running on iOS requires macOS with Xcode installed.
+## Web Builds
+
+### Required Web Dependencies
+
+The following web dependencies should be installed (already included in package.json):
+```bash
+npx expo install react-dom react-native-web @expo/metro-runtime
+```
+
+### Running Web Development Server
+
+To start the development server for web:
+```bash
+npx expo start --web
+```
+
+### Creating Production Web Builds
+
+To create a production-ready web build:
+
+```bash
+npx expo export --platform web
+```
+
+Or use the simpler command:
+
+```bash
+npx expo build:web
+```
+
+Both commands will generate a `web-build` directory containing all the static files needed for deployment.
+
+### Serving the Web Build Locally
+
+To test the web build locally before deployment:
+
+```bash
+npx serve web-build
+```
