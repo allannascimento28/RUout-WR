@@ -20,14 +20,13 @@ import { BASE_URL } from "../config";
 import { useAuth } from "../context/AuthContext";
 
 const PersonWithDisability = ({ navigation, route }: { navigation: any, route: any }) => {
-  const {authToken} = useAuth();
-  const incidentId = route.params?.incidentId;
+  const {data, setData, onComplete } = route.params;
+
   const [noOfPersonWithDisability, setNoOfPersonWithDisability] = useState('');
   const [descriptionAndLocation, setDescriptionAndLocation] = useState('');
   const [noOfPersonError, setNoOfPersonError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
 
-  console.log("here is incddd id :  ", incidentId)
 
   const handleNoOfPersonWithDisability = (text) => {
     setNoOfPersonWithDisability(text);
@@ -64,50 +63,17 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
   }
 
   const handleSave = () => {
-    if (handleValidate()) {
+    if (!handleValidate()) return;
+
+      setData({ noOfPersonWithDisability, descriptionAndLocation });
+      onComplete?.();
+      navigation.goBack();
       console.log("No. of Person with Disability:", parseInt(noOfPersonWithDisability, 10));
       console.log("Description and Location:", descriptionAndLocation);
       Keyboard.dismiss(); // Dismiss keyboard on successful save
-      handleAPICall();
-    }
+    
   }
 
-  const handleAPICall =async () => {
-    const token = authToken;
-    try{
-
-    const formData = new FormData();
-    formData.append("disability[status]", "true");
-    formData.append("disability[no_of_person]", noOfPersonWithDisability);     
-    formData.append("disability[description]", descriptionAndLocation);
-
-
-    const response = await axios.put(`${BASE_URL}/user/incident-type/${incidentId}`, formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data"
-      }
-
-    });
-
-    if( response.status === 200) {
-      console.log("Person with disability details saved successfully");
-      setNoOfPersonWithDisability('');
-      setDescriptionAndLocation('');
-      setNoOfPersonError('');
-      setDescriptionError('');
-      Alert.alert("Success", "Person with disability details saved successfully", [
-        { text: "OK", onPress: () => {
-          navigation.goBack();
-        }}
-      ]);
-    }
-    console.log("response is here:: ", response.data)
-
-    }catch(error){
-      console.log("Error in refusal is  :: ", error)
-    }
-  }
 
   const headerHeight = 60; // A common estimate for a header height
 

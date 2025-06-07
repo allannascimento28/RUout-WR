@@ -73,7 +73,7 @@ const TabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Assembly Area"
+        name="AssemblyArea"
         component={IndicateTypes}
         options={{
           tabBarIcon: ({ focused, size, color }) => (
@@ -130,6 +130,14 @@ const StackNavigator = () => {
       {/* // ) : ( */}
         
       {/* // )} */}
+      <Stack.Screen
+        name="AssemblyArea"
+        component={IndicateTypes}
+        options={{
+          headerShown: true,
+          title: "Assembly Area",
+        }}
+      />
 
       <Stack.Screen
         name="Instructions"

@@ -19,6 +19,7 @@ export type RootStackParamList = {
   ShelterInPlace: undefined;
   PreparetoLeave: undefined;
   ManualInstruction: undefined;
+  AssemblyArea: undefined;
 };
 
 export type TabParamList = {
