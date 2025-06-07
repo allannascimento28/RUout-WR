@@ -19,47 +19,12 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
     setErrorMessage('');
   }
 
-  // const handleAPICall =async () => {
-  //   const token = authToken;
-  //   try{
-
-  //   const formData = new FormData();
-  //   formData.append("additional[status]", "true");
-  //   formData.append("additional[notes]", notes);     
-
-
-  //   const response = await axios.put(`${BASE_URL}/user/incident-type/${incidentId}`, formData, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`,
-  //       "Content-Type": "multipart/form-data"
-  //     }
-
-  //   });
-
-  //   if( response.status === 200) {
-  //     console.log("Additional details saved successfully");
-  //     setNotes('');
-  //     setErrorMessage('');
-  //     Alert.alert("Success", "Additional details saved successfully", [
-  //       { text: "OK", onPress: () => {
-  //         navigation.goBack()
-  //       }}
-  //     ]);
-  //   }
-  //   console.log("response is here for additional details:: ", response.data)
-
-  //   }catch(error){
-  //     console.log("Error in additional details is  :: ", error)
-  //   }
-  // }
 
   const handleSave = () => {
     if (notes.trim() === '') {
       setErrorMessage('Please enter notes');
       return;
     }
-    // Keyboard.dismiss();
-    // handleAPICall();
     setData({ notes });
     onComplete?.();
     navigation.goBack();

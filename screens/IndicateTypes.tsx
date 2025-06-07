@@ -41,31 +41,8 @@ const IndicateTypes = ({ navigation }: {navigation : any}) => {
     console.log("Incident Types in IndicateTypes :: ", incidentTypes);
 
     useEffect(() => {
-        // getTypesDataAPICall();
         getIncidentTypesData();
     }, []);
-
-    // const getTypesDataAPICall = async () => {
-    //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzI1NTk3MjAzYTBmYjIyNzc4ZmFmMiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0ODEzMjU2M30.JhQaUrq8woPnyRXwrw2gV70HtwhP3XcIhsAlzj1i10w"
-    //     try {
-    //         const response = await axios.get(`${BASE_URL}/admin/all-incident-type`, {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //         });
-
-    //         const responseData = response.data;
-            // const mappedData: ListItem[] = responseData.map((item: any, index: number) => ({
-            //     id: item._id,
-            //     title: item.name,
-            //     image: imageList[index] || require('../assets/images/tick.png'),
-            // }));
-    //         console.log("mappedData is :: ",mappedData);
-    //         setListData(mappedData);
-    //     } catch (error) {
-    //         console.log("Error fetching incident types:", error);
-    //     }
-    // };
 
     const getIncidentTypesData = async() =>{
         console.log("incident Types :: ", incidentTypes)
