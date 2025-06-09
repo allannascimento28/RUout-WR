@@ -90,7 +90,7 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={true}
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
             <View style={styles.innerTouchableContainer}>
               <View style={styles.contentContainer}>
                 <CustomInput
@@ -117,7 +117,7 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
                 <CustomButton title="SAVE" onPress={handleSave} />
               </View>
             </View>
-          </TouchableWithoutFeedback>
+          {/* </TouchableWithoutFeedback> */}
         </ScrollView>
       </KeyboardAvoidingView>
     </View>

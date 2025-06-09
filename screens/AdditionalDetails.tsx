@@ -37,7 +37,7 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
           <View style={styles.screen}>
             <CustomHeader title="Additional Details and Requests" />
   
@@ -56,7 +56,7 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
               <CustomButton title="SAVE" onPress={handleSave} />
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        {/* </TouchableWithoutFeedback> */}
       </KeyboardAvoidingView>
     )
 }
