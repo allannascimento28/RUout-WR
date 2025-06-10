@@ -1,15 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, useWindowDimensions } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { scale, moderateScale } from 'react-native-size-matters';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Header = () => {
-  const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
-  
-  // Screen size breakpoints
-  const isLargeScreen = width > 768;
-  const isExtraLargeScreen = width > 1200;
   
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -21,9 +14,7 @@ const Header = () => {
         <Image 
           source={require('../assets/LOGO.png')} 
           style={[
-            styles.logo,
-            isLargeScreen && styles.largeLogo,
-            isExtraLargeScreen && styles.extraLargeLogo
+            styles.logo
           ]} 
         />
       </View>
@@ -55,27 +46,15 @@ const styles = StyleSheet.create({
     marginTop: -20,
   },
   logo: {
-    width: scale(50),
-    height: scale(50),
+    width: 50,
+    height: 50,
     position: 'absolute',
     bottom: 0,
     left: 16,
     resizeMode: 'contain',
     zIndex: 1,
-    marginTop: scale(20),
-  },
-  // Responsive styles for large screens
-  largeLogo: {
-    width: scale(60),
-    height: scale(60),
-    left: scale(20),
-  },
-  // Fixed size for extra large screens
-  extraLargeLogo: {
-    width: 65,
-    height: 65,
-    left: 30,
-  },
+    marginTop: 20,
+  }
 });
 
 export default Header;

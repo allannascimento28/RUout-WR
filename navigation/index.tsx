@@ -108,10 +108,10 @@ const TabNavigator = () => {
 };
 
 const StackNavigator = () => {
-  const { authToken } = useAuth();
+  const { authState } = useAuth();
   return (
     <Stack.Navigator
-      // initialRouteName= {!authToken ? "Login" : "Tabs"}
+      initialRouteName= {!authState.authToken ? "Login" : "Tabs"}
       screenOptions={{
         header: () => <Header />,
       }}

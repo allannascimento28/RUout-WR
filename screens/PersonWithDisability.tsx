@@ -1,23 +1,15 @@
 import React, { useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  TouchableWithoutFeedback,
   Keyboard,
-  ScrollView, // Import ScrollView
-  StatusBar,
-  Alert, // For potential StatusBar height if needed for offset
+  ScrollView,
 } from "react-native";
-import { scale, verticalScale } from "react-native-size-matters";
 import CustomHeader from "../components/CustomHeader";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
-import axios from "axios";
-import { BASE_URL } from "../config";
-import { useAuth } from "../context/AuthContext";
 
 const PersonWithDisability = ({ navigation, route }: { navigation: any, route: any }) => {
   const {data, setData, onComplete } = route.params;
@@ -30,18 +22,17 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
 
   const handleNoOfPersonWithDisability = (text) => {
     setNoOfPersonWithDisability(text);
-    setNoOfPersonError(''); // Clear error on change
+    setNoOfPersonError('');
   }
 
   const handleDescriptionAndLocation = (text) => {
     setDescriptionAndLocation(text);
-    setDescriptionError(''); // Clear error on change
+    setDescriptionError('');
   }
 
   const handleValidate = () => {
     let isValid = true;
 
-    // Validate No. of Person With Disability
     if (noOfPersonWithDisability.trim() === '') {
       setNoOfPersonError('Please enter the number of persons');
       isValid = false;
@@ -53,7 +44,6 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
       }
     }
 
-    // Validate Description and Location
     if (descriptionAndLocation.trim() === '') {
       setDescriptionError('Please enter description and location');
       isValid = false;
@@ -70,12 +60,12 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
       navigation.goBack();
       console.log("No. of Person with Disability:", parseInt(noOfPersonWithDisability, 10));
       console.log("Description and Location:", descriptionAndLocation);
-      Keyboard.dismiss(); // Dismiss keyboard on successful save
+      Keyboard.dismiss(); 
     
   }
 
 
-  const headerHeight = 60; // A common estimate for a header height
+  const headerHeight = 60; 
 
   return (
     <View style={styles.outerContainer}>
@@ -90,7 +80,7 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={true}
         >
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
             <View style={styles.innerTouchableContainer}>
               <View style={styles.contentContainer}>
                 <CustomInput
@@ -98,7 +88,7 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
                   placeholder="2"
                   value={noOfPersonWithDisability}
                   onChangeText={handleNoOfPersonWithDisability}
-                  keyboardType="numeric" // Set keyboard type to numeric
+                  keyboardType="numeric"
                   errorMessage={noOfPersonError}
                 />
 
@@ -108,17 +98,19 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
                   numberOfLines={6}
                   value={descriptionAndLocation}
                   onChangeText={handleDescriptionAndLocation}
-                  multiline={true} // Explicitly set multiline to true
+                  multiline={true}
                   errorMessage={descriptionError}
                 />
               </View>
-
-              <View style={styles.buttonContainer}>
-                <CustomButton title="SAVE" onPress={handleSave} />
-              </View>
             </View>
-          </TouchableWithoutFeedback>
+          {/* </TouchableWithoutFeedback> */}
         </ScrollView>
+        <View style={styles.buttonContainer}>
+          <CustomButton
+            title="SAVE"
+            onPress={handleSave}
+          />
+        </View>
       </KeyboardAvoidingView>
     </View>
   )
@@ -148,10 +140,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
-    marginTop: 20,
-    marginBottom: 20,
+    flex: 1,
     position: 'absolute',
-    bottom: 0,
+    bottom: 32,
+    padding: 16,
     width: '100%',
   },
 });

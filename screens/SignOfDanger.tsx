@@ -6,7 +6,6 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
 import { BASE_URL } from "../config";
-import { useAuth } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
 
@@ -43,7 +42,7 @@ const SignOfDanger = ({ route }: { route: any }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? headerHeight + 20 : 0}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
         <View style={styles.screen}>
           <CustomHeader title="Sign of Danger" />
 
@@ -62,7 +61,7 @@ const SignOfDanger = ({ route }: { route: any }) => {
             <CustomButton title="SAVE" onPress={handleSave} />
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      {/* </TouchableWithoutFeedback> */}
     </KeyboardAvoidingView>
     )
 }

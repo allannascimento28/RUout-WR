@@ -37,7 +37,7 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
           <View style={styles.screen}>
             <CustomHeader title="Additional Details and Requests" />
   
@@ -56,7 +56,7 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
               <CustomButton title="SAVE" onPress={handleSave} />
             </View>
           </View>
-        </TouchableWithoutFeedback>
+        {/* </TouchableWithoutFeedback> */}
       </KeyboardAvoidingView>
     )
 }
@@ -64,18 +64,18 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
 export default AdditionalDetails;
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        backgroundColor: '#fff',
-        paddingHorizontal: scale(16),
-        paddingTop: verticalScale(16),
-    },
-    contentContainer: {
-        flex: 1,
-        padding: scale(16)
-    },
-    buttonContainer: {
-        padding: scale(16),
-        marginBottom: scale(16)
-    },
+  screen: {
+      flex: 1,
+      backgroundColor: '#fff',
+      paddingHorizontal: 16,
+      paddingTop: 16,
+  },
+  contentContainer: {
+      flex: 1,
+      padding: 16
+  },
+  buttonContainer: {
+      padding: 16,
+      marginBottom: 16
+  },
 })

@@ -29,7 +29,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onClose, onSave }) => {
 
   useEffect(() => {
     return () => {
-      // Cleanup
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }

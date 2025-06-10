@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigation } from '../navigation/types';
 import { loadFonts } from '../assets/fonts/Fonts';
-import CustomButton from '../components/CustomButton';
 import { scale, verticalScale } from 'react-native-size-matters';
 
 const Home = () => {
   const navigation = useNavigation<RootStackNavigation>();
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  const [activating, setActivating] = useState(false);
+  const [navigatingToPreIncident, setNavigatingToPreIncident] = useState(false);
 
   useEffect(() => {
     async function loadResources() {
@@ -18,8 +19,29 @@ const Home = () => {
     loadResources();
   }, []);
 
+  const handleActivate = () => {
+    setActivating(true);
+    setTimeout(() => {
+      navigation.navigate('AssemblyArea');
+      setActivating(false);
+    }, 300);
+  };
+
+  const handlePreIncidentLinks = () => {
+    setNavigatingToPreIncident(true);
+    setTimeout(() => {
+      navigation.navigate('PreIncidentLinks');
+      setNavigatingToPreIncident(false);
+    }, 300);
+  };
+
   if (!fontsLoaded) {
-    return null;
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3392CC" />
+        <Text style={styles.loadingText}>Loading resources...</Text>
+      </View>
+    );
   }
 
   return (
@@ -44,17 +66,28 @@ const Home = () => {
 
       <View style={styles.buttonContainer}>
       <TouchableOpacity
-          style={styles.activateButton}
-        >
+        style={styles.activateButton}
+        onPress={handleActivate}
+        disabled={activating}
+      >
+        {activating ? (
+          <ActivityIndicator size="small" color="#ffffff" />
+        ) : (
           <Text style={styles.activateButtonText}>ACTIVATE</Text>
-        </TouchableOpacity>
+        )}
+      </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.preIncidentButton}
-          onPress={() => navigation.navigate('PreIncidentLinks')}
-        >
+      <TouchableOpacity
+        style={styles.preIncidentButton}
+        onPress={handlePreIncidentLinks}
+        disabled={navigatingToPreIncident}
+      >
+        {navigatingToPreIncident ? (
+          <ActivityIndicator size="small" color="#3392CC" />
+        ) : (
           <Text style={styles.preIncidentText}>PRE INCIDENT LINKS</Text>
-        </TouchableOpacity>
+        )}
+      </TouchableOpacity>
       </View>
     </View>
   );
@@ -71,6 +104,18 @@ const styles = StyleSheet.create({
   },
   content: {
     // marginTop: 40,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  loadingText: {
+    marginTop: 12,
+    fontSize: 16,
+    color: '#3392CC',
+    fontWeight: '500',
   },
   title: {
     color: '#3392CC',
@@ -110,8 +155,10 @@ const styles = StyleSheet.create({
     borderColor: '#3392CC',
     borderWidth: 1,
     paddingVertical: 14,
-    borderRadius: scale(30),
+    borderRadius: 30,
     alignItems: 'center',
+    justifyContent: 'center',
+    height: 50, 
   },
   preIncidentText: {
     color: '#3392CC',
@@ -121,9 +168,10 @@ const styles = StyleSheet.create({
   activateButton:{
     backgroundColor: '#F9980D',
     paddingVertical: 14,
-    borderRadius: scale(30),
+    borderRadius: 30,
     alignItems: 'center', 
     justifyContent: 'center',
+    height: 54,
   },
   activateButtonText: {
     color: 'white',

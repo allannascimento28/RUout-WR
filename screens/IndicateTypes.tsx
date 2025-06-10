@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import React, { use, useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator, Alert, Platform } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TabNavigation } from '../navigation/types';
@@ -8,7 +8,7 @@ import CustomHeader from '../components/CustomHeader';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import axios from 'axios';
 import { BASE_URL } from '../config';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, useLogout } from '../context/AuthContext';
 
 type Props = {
   navigation: TabNavigation;
@@ -36,24 +36,36 @@ const imageList: any[] = [
 ];
 
 const IndicateTypes = ({ navigation }: {navigation : any}) => {
-    const { authToken, incidentTypes } = useAuth();
+    const { authState } = useAuth();
     const [listData, setListData] = useState<ListItem[]>([]);
-    console.log("Incident Types in IndicateTypes :: ", incidentTypes);
-
+    const [loading, setLoading] = useState(true);
+    
     useEffect(() => {
         getIncidentTypesData();
     }, []);
 
-    const getIncidentTypesData = async() =>{
-        console.log("incident Types :: ", incidentTypes)
 
-        const mappedData: ListItem[] = incidentTypes.map((item: any, index: number) => ({
-            id: item.id,
-            title: item.title,
-            image: imageList[index] || require('../assets/images/tick.png'),
-        }));
-        console.log("mappedData is :: ",mappedData);
-        setListData(mappedData);
+    const getIncidentTypesData = async() => {
+        setLoading(true);
+        try {
+            console.log("incident Types :: ", authState.incidentTypes);
+
+            const mappedData: ListItem[] = authState.incidentTypes.map((item: any, index: number) => ({
+                id: item.id,
+                title: item.title,
+                image: imageList[index] || require('../assets/images/tick.png'),
+            }));
+            console.log("mappedData is :: ",mappedData);
+            setListData(mappedData);
+            if (mappedData.length === 0) {
+                useLogout();
+                navigation.navigate('Login');
+            }
+        } catch (error) {
+            console.error("Error processing incident types:", error);
+        } finally {
+            setLoading(false);
+        }
     }
 
     const handleListItemPress = (item: ListItem) => {
@@ -74,12 +86,25 @@ const IndicateTypes = ({ navigation }: {navigation : any}) => {
     return (
         <View style={styles.screen}>
             <CustomHeader title="Select Incident Type" />
-            <FlatList
-                data={listData}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={styles.listContainer}
-            />
+            
+            {loading ? (
+                <View style={styles.loadingContainer}>
+                    <ActivityIndicator size="large" color="#3392CC" />
+                    <Text style={styles.loadingText}>Loading incident types...</Text>
+                </View>
+            ) : (
+                <FlatList
+                    data={listData}
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id.toString()}
+                    contentContainerStyle={styles.listContainer}
+                    ListEmptyComponent={
+                        <View style={styles.emptyContainer}>
+                            <Text style={styles.emptyText}>No incident types available</Text>
+                        </View>
+                    }
+                />
+            )}
         </View>
     );
 };
@@ -94,6 +119,27 @@ const styles = StyleSheet.create({
     listContainer: {
         paddingHorizontal: 16,
         paddingTop: 16,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+    },
+    loadingText: {
+        marginTop: 12,
+        fontSize: 16,
+        color: '#3392CC',
+        fontFamily: 'Manrope-Medium',
+    },
+    emptyContainer: {
+        padding: 20,
+        alignItems: 'center',
+    },
+    emptyText: {
+        fontSize: 16,
+        color: '#666',
+        fontFamily: 'Manrope-Medium',
     },
     listItem: {
         marginBottom: 10,
