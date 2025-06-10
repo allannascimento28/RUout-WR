@@ -27,7 +27,7 @@ interface AudioRecording {
 
 const MediaFiles: React.FC<{route: any}> = ({route}) => {
 
-  const {data, setData, onComplete } = route.params;
+  const {setData, onComplete, audioRecordings } = route.params;
   const navigation = useNavigation();
   const incidentId = route.params?.incidentId;
   const [showRecorder, setShowRecorder] = useState(false);
@@ -49,13 +49,13 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
   const handleSaveRecording = (uri: string, duration: number) => {
     const newRecording: AudioRecording = {
       uri,
-      name: `Recording ${data.audioRecordings?.length + 1}`,
+      name: `Recording ${audioRecordings?.length + 1}`,
       timestamp: new Date(),
       duration,
     };
-    setData({ ...data, audioRecordings: [...data.audioRecordings, newRecording] });
+    setData({ audioRecordings: [audioRecordings, newRecording] });
     onComplete?.();
-    navigation.goBack();
+    // navigation.goBack();
   };
 
   const deleteRecording = (index: number) => {
@@ -68,9 +68,9 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            setData({ ...data, audioRecordings: data.audioRecordings?.filter((_, i) => i !== index) });
+            setData({ audioRecordings: audioRecordings?.filter((_, i) => i !== index) });
             onComplete?.();
-            navigation.goBack();
+            // navigation.goBack();
           }
         }
       ]

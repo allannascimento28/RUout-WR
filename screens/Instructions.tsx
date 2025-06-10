@@ -170,7 +170,7 @@ const Instructions = ({ route }: { route: any }) => {
       title: 'Media Files',
       image: MediaImage,
       onPress: () => navigation.navigate('MediaFiles', {
-        data: audioRecordings,
+        audioRecordings,
         setData: setAudioRecordings,
         onComplete: () => {}
       })
