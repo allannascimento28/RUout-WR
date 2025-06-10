@@ -9,13 +9,10 @@ import {
   Image,
   StyleSheet,
   ScrollView,
-  Keyboard,
-  TouchableWithoutFeedback,
   Alert,
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { moderateScale, scale } from "react-native-size-matters";
 import { useWindowDimensions } from "react-native";
 import axios from "axios";
 import BottomImage from "../assets/loginBottomImage.png";
@@ -82,59 +79,64 @@ const Login = () => {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1 }}
       >
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={styles.scroll}
-          >
-            <View style={styles.logoContainer}>
-              <Image
-                source={require("../assets/LOGO.png")}
-                style={styles.logo}
-                resizeMode="contain"
-              />
-              <Text style={styles.title}>Sign In</Text>
-            </View>
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={styles.scroll}
+        >
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("../assets/LOGO.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+            <Text style={styles.title}>Sign In</Text>
+          </View>
 
-            <View style={styles.formContainer}>
-              <Text style={styles.label}>User Name</Text>
-              <TextInput
-                value={userName}
-                onChangeText={(text) => {
-                  setUserName(text);
-                  if (text.trim() !== "") setUserNameError(false);
-                }}
-                placeholder="User Name"
-                style={[styles.input, userNameError && styles.inputError]}
-                autoCapitalize="none"
-                autoCorrect={false}
-                tabIndex={0}
-              />
+          <View style={styles.formContainer}>
+            <Text style={styles.label}>User Name</Text>
+            <TextInput
+              value={userName}
+              onChangeText={(text) => {
+                setUserName(text);
+                if (text.trim() !== "") setUserNameError(false);
+              }}
+              placeholder="User Name"
+              style={[styles.input, userNameError && styles.inputError]}
+              autoCapitalize="none"
+              autoCorrect={false}
+              tabIndex={0}
+            />
 
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text);
-                  if (text.trim() !== "") setPasswordError(false);
-                }}
-                placeholder="Password"
-                style={[styles.input, passwordError && styles.inputError]}
-                secureTextEntry
-                autoCapitalize="none"
-                autoCorrect={false}
-                tabIndex={0}
-              />
+            <Text style={styles.label}>Password</Text>
+            <TextInput
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+                if (text.trim() !== "") setPasswordError(false);
+              }}
+              placeholder="Password"
+              style={[styles.input, passwordError && styles.inputError]}
+              secureTextEntry
+              autoCapitalize="none"
+              autoCorrect={false}
+              tabIndex={0}
+            />
 
-              {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
+            {authError ? (
+              <Text style={styles.errorText}>{authError}</Text>
+            ) : null}
 
-              <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                {loading ? <ActivityIndicator size="small" color="#fff" /> : <Text style={styles.buttonText}>Continue</Text>} 
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity style={styles.button} onPress={handleLogin}>
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>Continue</Text>
+              )}
+            </TouchableOpacity>
+          </View>
 
-            <Image source={BottomImage} style={styles.bottomImage} />
-          </ScrollView>
-        
+          <Image source={BottomImage} style={styles.bottomImage} />
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

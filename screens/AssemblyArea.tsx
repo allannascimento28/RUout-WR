@@ -1,8 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { View, StyleSheet } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigation } from '../navigation/types';
 

@@ -15,7 +15,6 @@ import { Audio } from 'expo-av';
 import AudioRecorder from '../components/AudioRecorder';
 import ImageUploader from '../components/ImageUploader';
 import CustomHeader from '../components/CustomHeader';
-import { scale, verticalScale } from 'react-native-size-matters';
 import axios from 'axios';
 import { BASE_URL } from '../config';
 

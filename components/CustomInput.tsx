@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet, Dimensions, KeyboardTypeOptions } from 'react-native';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { View, Text, TextInput, StyleSheet, KeyboardTypeOptions } from 'react-native';
 
 interface CustomInputProps {
     label: string;

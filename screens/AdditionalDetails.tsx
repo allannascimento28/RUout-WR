@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, Alert } from "react-native";
-import { scale, verticalScale } from "react-native-size-matters";
+import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
 import CustomHeader from "../components/CustomHeader";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
-import axios from "axios";
-import { BASE_URL } from "../config";
-import { useAuth } from "../context/AuthContext";
 
 const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any }) => {
   const {data, setData, onComplete } = route.params;
@@ -34,13 +30,15 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
     return (
       <KeyboardAvoidingView
         style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
       >
-        {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
           <View style={styles.screen}>
             <CustomHeader title="Additional Details and Requests" />
-  
+            <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            keyboardDismissMode="on-drag"
+            >
             <View style={styles.contentContainer}>
               <CustomInput
                 label="Notes"
@@ -55,8 +53,9 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
             <View style={styles.buttonContainer}>
               <CustomButton title="SAVE" onPress={handleSave} />
             </View>
+
+            </ScrollView>
           </View>
-        {/* </TouchableWithoutFeedback> */}
       </KeyboardAvoidingView>
     )
 }
@@ -73,6 +72,9 @@ const styles = StyleSheet.create({
   contentContainer: {
       flex: 1,
       padding: 16
+  },
+  scrollViewContent: {
+    flexGrow: 1,
   },
   buttonContainer: {
       padding: 16,

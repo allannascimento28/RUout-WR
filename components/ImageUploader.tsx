@@ -14,12 +14,11 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { scale } from 'react-native-size-matters';
 import axios from 'axios';
 import { BASE_URL } from '../config';
 
 const { width: screenWidth } = Dimensions.get('window');
-const boxSize = scale(95);
+const boxSize = 95;
 const numColumns = Math.floor(screenWidth / (boxSize + 16));
 
 interface ImageData {

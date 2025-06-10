@@ -50,7 +50,6 @@ const Refusals = ({ route, navigation }) => {
         keyboardVerticalOffset={60}
       >
         <ScrollView contentContainerStyle={styles.scrollViewContent}>
-          {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
             <View>
               <CustomInput
                 label="No. of Refusals"
@@ -76,7 +75,6 @@ const Refusals = ({ route, navigation }) => {
                 errorMessage={locationError}
               />
             </View>
-          {/* </TouchableWithoutFeedback> */}
         </ScrollView>
         <View style={styles.buttonContainer}>
           <CustomButton title="SAVE" onPress={handleSave} />

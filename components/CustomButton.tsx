@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';    
 
 interface CustomButtonProps {
     title: string;
