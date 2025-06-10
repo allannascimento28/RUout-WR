@@ -36,7 +36,7 @@ const InstructionScreen: React.FC<InstructionScreenProps> = ({
       {/* Top-left Cancel Button */}
       <TouchableOpacity 
         style={styles.cancelButton}
-        onPress={() => navigation.navigate('Tabs', { screen: 'Watch' })} // Navigate to Home screen within Tabs
+        onPress={() => navigation.navigate('Tabs', { screen: 'Watch' })}
       >
         <Text style={styles.cancelButtonText}>Cancel</Text>
       </TouchableOpacity>

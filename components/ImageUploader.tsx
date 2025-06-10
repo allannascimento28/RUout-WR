@@ -56,10 +56,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
   };
 
   const uploadSingleImage = async (imageData: ImageData) => {
-    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MzI1NTk3MjAzYTBmYjIyNzc4ZmFmMiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0ODEzMjU2M30.JhQaUrq8woPnyRXwrw2gV70HtwhP3XcIhsAlzj1i10w";
-    // const token = authToken;
+
     try {
-      // Set uploading state
+
       setImages(prev => 
         prev.map(img => 
           img.id === imageData.id 
@@ -90,7 +89,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
       }
       
       
-      // Update state to remove uploading indicator
       setImages(prev => 
         prev.map(img => 
           img.id === imageData.id 
@@ -102,7 +100,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
     } catch (error) {
       console.log(`Upload error for image ${imageData.id}:`, error);
       
-      // Update state to show error
+
       setImages(prev => 
         prev.map(img => 
           img.id === imageData.id 
@@ -124,10 +122,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
         uploadError: false,
       }));
       
-      // Add images to state first
       setImages(prev => [...prev, ...newImages]);
       
-      // Upload each image individually
       for (const imageData of newImages) {
         uploadSingleImage(imageData);
       }
@@ -143,11 +139,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
         isUploading: false,
         uploadError: false,
       }));
-      
-      // Add images to state first
+
       setImages(prev => [...prev, ...newImages]);
       
-      // Upload each image individually
       for (const imageData of newImages) {
         uploadSingleImage(imageData);
       }
@@ -232,7 +226,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
         const index = i + j;
         
         if (index === images.length) {
-          // Upload button
           rowItems.push(
             <TouchableOpacity
               key="upload"
@@ -243,7 +236,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
             </TouchableOpacity>
           );
         } else {
-          // Image item
           const image = images[index];
           rowItems.push(
             <View key={image.id} style={styles.imageContainer}>

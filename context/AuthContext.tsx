@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, use, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Define the shape of the context
 
 type IncidentType = {
   id: string;
@@ -26,7 +25,6 @@ const initialAuthState: AuthState = {
 
 
 
-// Create the context with default values
 const AuthContext = createContext<AuthContextType>({
   authState: initialAuthState,
   updateAuthState: () => {},

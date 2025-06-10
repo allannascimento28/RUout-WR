@@ -9,8 +9,7 @@ const ResponseVideos = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [status, setStatus] = useState<AVPlaybackStatus>({} as AVPlaybackStatus);
 
-  const videoUri = require('../assets/sampleVideo.mp4'); // Add your video file here
-
+  const videoUri = require('../assets/sampleVideo.mp4'); 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
   };
@@ -43,7 +42,6 @@ const ResponseVideos = () => {
           source={videoUri}
           useNativeControls
           resizeMode="contain"
-          // isLooping
           onPlaybackStatusUpdate={status => setStatus(status)}
         />
       </View>

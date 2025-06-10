@@ -32,13 +32,11 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
   const navigation = useNavigation();
   const incidentId = route.params?.incidentId;
   const [showRecorder, setShowRecorder] = useState(false);
-  // const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
   const [playingSound, setPlayingSound] = useState<Audio.Sound | null>(null);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
 
   useEffect(() => {
     return () => {
-      // Cleanup sound when component unmounts
       if (playingSound) {
         playingSound.unloadAsync();
       }
@@ -56,8 +54,6 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
       timestamp: new Date(),
       duration,
     };
-    // setAudioRecordings(prev => [...prev, newRecording]);
-    // handleAPICall();
     setData({ ...data, audioRecordings: [...data.audioRecordings, newRecording] });
     onComplete?.();
     navigation.goBack();
@@ -84,7 +80,6 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
 
   const togglePlayback = async (uri: string, recordingName: string) => {
     try {
-      // Stop current playback if playing different recording
       if (playingSound && currentlyPlaying !== uri) {
         await playingSound.stopAsync();
         await playingSound.unloadAsync();
@@ -93,11 +88,9 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
       }
 
       if (currentlyPlaying === uri && playingSound) {
-        // Pause current recording
         await playingSound.pauseAsync();
         setCurrentlyPlaying(null);
       } else {
-        // Play recording
         if (!playingSound || currentlyPlaying !== uri) {
           const { sound } = await Audio.Sound.createAsync(
             { uri },

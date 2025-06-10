@@ -10,11 +10,7 @@ const WatchScreen = () => {
     <View style={styles.container}>
       <TouchableOpacity 
         style={styles.button}
-        // onPress={() => navigation.navigate('SafeAtWork')}
-        // onPress={() => navigation.navigate('EvacuateNow')}
-        //onPress={() => navigation.navigate('ShelterInPlace')}
         onPress={() => navigation.navigate('ManualInstruction')}
-        // onPress={() => navigation.navigate('PreparetoLeave')}
       >
         <Text style={styles.buttonText}>Watch</Text>
       </TouchableOpacity>

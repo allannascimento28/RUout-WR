@@ -1,15 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, useWindowDimensions } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { scale, moderateScale } from 'react-native-size-matters';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Header = () => {
-  const insets = useSafeAreaInsets();
-  const { width } = useWindowDimensions();
-  
-  // Screen size breakpoints
-  const isLargeScreen = width > 768;
-  const isExtraLargeScreen = width > 1200;
   
   return (
     <SafeAreaView style={[styles.safeArea]}>

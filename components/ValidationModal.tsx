@@ -28,7 +28,6 @@ const ThankYouModal: React.FC<ThankYouModalProps> = ({ visible, onClose, onDownl
                 useNativeDriver: true,
             }).start();
 
-            // Navigate back to indicateTypes after 3 seconds
             const timer = setTimeout(() => {
                 navigation.navigate('Tabs', { screen: 'AssemblyArea' });
                 onClose();

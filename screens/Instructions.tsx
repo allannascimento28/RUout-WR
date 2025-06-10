@@ -40,28 +40,24 @@ const Instructions = ({ route }: { route: any }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Simple state for button selections
   const [selections, setSelections] = useState({
-    allClear: null, // null, true, false
+    allClear: null,
     refusals: null,
     personWithDisability: null,
     signOfDanger: null,
   });
 
-  // Data states
   const [refusalsData, setRefusalsData] = useState({ noOfRefusals: '', location: '' });
   const [personWithDisabilityData, setPersonWithDisabilityData] = useState({noOfPersonWithDisability: '', descriptionAndLocation: ''});
   const [signOfDangerData, setSignOfDangerData] = useState({signOfDanger: ''});
   const [additionalDetails, setAdditionalDetails] = useState({notes: ''});
   const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
 
-  // Check if form can be submitted
   const canSubmit = selections.allClear === true || 
     (selections.refusals !== null && selections.personWithDisability !== null && selections.signOfDanger !== null);
 
   const handleButtonPress = (section: string, value: boolean) => {
     if (section === 'allClear' && value) {
-      // If All Clear is Yes, set all to No
       setSelections({
         allClear: true,
         refusals: false,
@@ -72,11 +68,9 @@ const Instructions = ({ route }: { route: any }) => {
       setSelections(prev => ({
         ...prev,
         [section]: value,
-        // If any other section is changed, clear All Clear
         ...(section !== 'allClear' && { allClear: false })
       }));
 
-      // Navigate to screens if Yes is selected
       if (value && section !== 'allClear') {
         const navigationMap = {
           refusals: () => navigation.navigate('Refusals', {
@@ -105,7 +99,6 @@ const Instructions = ({ route }: { route: any }) => {
     const token = authState.authToken;
     const formData = new FormData();
 
-    // Build form data based on selections
     formData.append('refusal[status]', selections.refusals ? 'true' : 'false');
     if (selections.refusals) {
       formData.append('refusal[no_of_refusal]', refusalsData.noOfRefusals);
