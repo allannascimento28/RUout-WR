@@ -16,88 +16,6 @@ interface AudioRecorderProps {
   onSave: (uri: string, duration: number) => void;
 }
 
-const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  container: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 20,
-    width: '90%',
-    maxHeight: '90%',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600',
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  micContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  timer: {
-    fontSize: 24,
-    fontWeight: '500',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  controlButton: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: '#6B7280',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-    marginBottom: 20,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 20,
-  },
-  button: {
-    width: '45%',
-    padding: 12,
-    borderRadius: 6,
-    alignItems: 'center',
-  },
-  saveButton: {
-    backgroundColor: '#3B82F6',
-  },
-  cancelButton: {
-    backgroundColor: '#BFDBFE',
-    borderWidth: 1,
-    borderColor: '#D1D5DB',
-  },
-  disabledButton: {
-    backgroundColor: '#F3F4F6',
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  saveButtonText: {
-    color: '#FFFFFF',
-  },
-  cancelButtonText: {
-    color: '#374151',
-  },
-});
-
 const AudioRecorder: React.FC<AudioRecorderProps> = ({ onClose, onSave }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURI, setAudioURI] = useState<string | null>(null);
@@ -331,3 +249,156 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onClose, onSave }) => {
 };
 
 export default AudioRecorder;
+
+const styles = StyleSheet.create({
+
+  overlay: {
+
+    flex: 1,
+
+    backgroundColor: 'rgba(0,0,0,0.4)',
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+  },
+
+  container: {
+
+    backgroundColor: 'white',
+
+    borderRadius: 12,
+
+    padding: 24,
+
+    width: 320,
+
+    alignItems: 'center',
+
+    shadowColor: '#000',
+
+    shadowOffset: { width: 0, height: 2 },
+
+    shadowOpacity: 0.25,
+
+    shadowRadius: 8,
+
+    elevation: 8,
+
+  },
+
+  title: {
+
+    fontSize: 18,
+
+    fontWeight: '600',
+
+    marginBottom: 16,
+
+    color: '#1F2937',
+
+  },
+
+  micContainer: {
+
+    marginBottom: 16,
+
+  },
+
+  timer: {
+
+    fontSize: 18,
+
+    fontFamily: 'monospace',
+
+    marginBottom: 24,
+
+    color: '#1F2937',
+
+  },
+
+  controlButton: {
+
+    marginBottom: 24,
+
+    backgroundColor: '#F3F4F6',
+
+    borderRadius: 40,
+
+    width: 80,
+
+    height: 80,
+
+    alignItems: 'center',
+
+    justifyContent: 'center',
+
+  },
+
+  actionButtons: {
+
+    flexDirection: 'row',
+
+    gap: 16,
+
+    width: '100%',
+
+  },
+
+  button: {
+
+    flex: 1,
+
+    paddingVertical: 12,
+
+    borderRadius: 25,
+
+    alignItems: 'center',
+
+  },
+
+  saveButton: {
+
+    backgroundColor: '#BFDBFE',
+
+  },
+
+  cancelButton: {
+
+    backgroundColor: '#BFDBFE',
+
+    borderWidth: 1,
+
+    borderColor: '#D1D5DB',
+
+  },
+
+  disabledButton: {
+
+    backgroundColor: '#F3F4F6',
+
+  },
+
+  buttonText: {
+
+    fontSize: 16,
+
+    fontWeight: '500',
+
+  },
+
+  saveButtonText: {
+
+    color: '#6B7280',
+
+  },
+
+  cancelButtonText: {
+
+    color: '#374151',
+
+  },
+
+});
+

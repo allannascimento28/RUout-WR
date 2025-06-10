@@ -120,9 +120,9 @@ const ImageUploader: React.FC = () => {
       
       setImages(prev => [...prev, ...newImages]);
       
-      for (const imageData of newImages) {
-        uploadSingleImage(imageData);
-      }
+      // for (const imageData of newImages) {
+      //   uploadSingleImage(imageData);
+      // }
     }
     setShowUploadOptions(false);
   };
