@@ -25,14 +25,35 @@ interface AudioRecording {
   duration: number;
 }
 
-const MediaFiles: React.FC<{route: any}> = ({route}) => {
+interface MediaFilesProps {
+  route: {
+    params: {
+      setData: (data: { audioRecordings: AudioRecording[] }) => void;
+      onComplete?: () => void;
+      data: { audioRecordings: AudioRecording[] };
+      incidentId: string;
+    };
+  };
+}
 
-  const {setData, onComplete, audioRecordings } = route.params;
+const MediaFiles: React.FC<MediaFilesProps> = ({ route }) => {
+  const { setData, onComplete, data } = route.params;
   const navigation = useNavigation();
-  const incidentId = route.params?.incidentId;
   const [showRecorder, setShowRecorder] = useState(false);
   const [playingSound, setPlayingSound] = useState<Audio.Sound | null>(null);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+  
+  // Local state to manage recordings for immediate UI updates
+  const [localRecordings, setLocalRecordings] = useState<AudioRecording[]>(
+    data?.audioRecordings || []
+  );
+
+  // Update local state when data prop changes
+  useEffect(() => {
+    if (data?.audioRecordings) {
+      setLocalRecordings(data.audioRecordings);
+    }
+  }, [data?.audioRecordings]);
 
   useEffect(() => {
     return () => {
@@ -47,15 +68,34 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
   };
 
   const handleSaveRecording = (uri: string, duration: number) => {
-    const newRecording: AudioRecording = {
-      uri,
-      name: `Recording ${audioRecordings?.length + 1}`,
-      timestamp: new Date(),
-      duration,
-    };
-    setData({ audioRecordings: [audioRecordings, newRecording] });
-    onComplete?.();
-    // navigation.goBack();
+    try {
+      const newRecording: AudioRecording = {
+        uri,
+        name: `Recording ${(localRecordings?.length || 0) + 1}`,
+        timestamp: new Date(),
+        duration,
+      };
+      
+      console.log("Creating new recording:", newRecording);
+      
+      // Update local state immediately for UI responsiveness
+      const updatedRecordings = [...localRecordings, newRecording];
+      setLocalRecordings(updatedRecordings);
+      
+      // Update parent state with the complete updated array
+      setData({ audioRecordings: updatedRecordings });
+      
+      // Call completion callback
+      onComplete?.();
+
+      console.log("New recording saved:", newRecording);
+      console.log("Total recordings:", updatedRecordings.length);
+      console.log("Updated recordings array:", updatedRecordings);
+      
+    } catch (error) {
+      console.error("Error saving recording:", error);
+      Alert.alert('Error', 'Failed to save recording');
+    }
   };
 
   const deleteRecording = (index: number) => {
@@ -68,9 +108,15 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            setData({ audioRecordings: audioRecordings?.filter((_, i) => i !== index) });
-            onComplete?.();
-            // navigation.goBack();
+            try {
+              const updatedRecordings = localRecordings.filter((_, i) => i !== index);
+              setLocalRecordings(updatedRecordings);
+              setData({ audioRecordings: updatedRecordings });
+              onComplete?.();
+            } catch (error) {
+              console.error("Error deleting recording:", error);
+              Alert.alert('Error', 'Failed to delete recording');
+            }
           }
         }
       ]
@@ -126,11 +172,10 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const audioRecordingToBlob = async (recording: AudioRecording): Promise<Blob> => {
-    const response = await fetch(recording.uri);
-    return await response.blob();
-  };
-
+  // Debug logging
+  console.log("Current localRecordings:", localRecordings);
+  console.log("Current data.audioRecordings:", data?.audioRecordings);
+  console.log("Recordings length:", localRecordings?.length);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -156,10 +201,10 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
           </TouchableOpacity>
 
           {/* Recorded Audio List */}
-          {audioRecordings.length > 0 && (
+          {localRecordings && localRecordings.length > 0 ? (
             <View style={styles.recordingsList}>
-              {audioRecordings.map((recording, index) => (
-                <View key={index} style={styles.recordingItem}>
+              {localRecordings.map((recording, index) => (
+                <View key={`${recording.uri}-${index}`} style={styles.recordingItem}>
                   <View style={styles.recordingHeader}>
                     <View style={styles.recordingInfo}>
                       <Text style={styles.recordingName}>{recording.name}</Text>
@@ -191,13 +236,15 @@ const MediaFiles: React.FC<{route: any}> = ({route}) => {
                 </View>
               ))}
             </View>
+          ) : (
+            <Text style={styles.noRecordingsText}>No recordings yet</Text>
           )}
         </View>
 
         {/* Image Section */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Images</Text>
-          <ImageUploader incidentId={incidentId} />
+          <ImageUploader />
         </View>
       </ScrollView>
 
@@ -293,6 +340,25 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 6,
     alignSelf: 'flex-start',
+  },
+  playButtonText: {
+    marginLeft: 8,
+    fontSize: 14,
+    color: '#3B82F6',
+    fontWeight: '500',
+  },
+  debugText: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginBottom: 8,
+    fontStyle: 'italic',
+  },
+  noRecordingsText: {
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginTop: 20,
+    fontStyle: 'italic',
   },
 });
 

@@ -28,11 +28,8 @@ interface ImageData {
   uploadError?: boolean;
 }
 
-interface ImageUploaderProps {
-  incidentId: string;
-}
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
+const ImageUploader: React.FC = () => {
 
   const [images, setImages] = useState<ImageData[]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);

@@ -8,7 +8,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import ThankYouModal from '../components/ValidationModal';
+import ValidationModal from '../components/ValidationModal';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
@@ -95,6 +95,7 @@ const Instructions = ({ route }: { route: any }) => {
   };
 
   const handleSubmit = async () => {
+    console.log("Audio Recordings:", audioRecordings)
     setIsSubmitting(true);
     const token = authState.authToken;
     const formData = new FormData();
@@ -120,12 +121,26 @@ const Instructions = ({ route }: { route: any }) => {
     formData.append('additional[notes]', additionalDetails.notes);
 
     formData.append("media[status]", audioRecordings.length > 0 ? "true" : "false");
-    for (const recording of audioRecordings) {
-      formData.append('media[record][]', {
-        uri: recording.uri,
-        type: 'audio/x-wav',
-        name: recording.name,
-      });
+
+    // Convert audio recordings to Blob and append to FormData
+    if (audioRecordings.length > 0) {
+      try {
+        const promises = audioRecordings.map(async (recording) => {
+          try {
+            const response = await fetch(recording.uri);
+            const blob = await response.blob();
+            formData.append('media[record][]', blob, recording.name);
+          } catch (error) {
+            console.error(`Error processing recording ${recording.name}:`, error);
+            throw error;
+          }
+        });
+        await Promise.all(promises);
+      } catch (error) {
+        console.error('Error processing audio recordings:', error);
+        Alert.alert('Error', 'Failed to process audio recordings');
+        return;
+      }
     }
 
     try {
@@ -139,7 +154,7 @@ const Instructions = ({ route }: { route: any }) => {
       if (response.status === 200) {
         setIsModalVisible(true);
       } else {
-        Alert.alert('Error', 'Failed to submit');
+        Alert.alert('Error', `Server responded with status ${response.status}`);
       }
     } catch (error) {
       console.error('Submit error:', error);
@@ -170,9 +185,10 @@ const Instructions = ({ route }: { route: any }) => {
       title: 'Media Files',
       image: MediaImage,
       onPress: () => navigation.navigate('MediaFiles', {
-        audioRecordings,
+        data: { audioRecordings },
         setData: setAudioRecordings,
-        onComplete: () => {}
+        onComplete: () => {},
+        incidentId: incidentId
       })
     },
   ];
@@ -243,7 +259,7 @@ const Instructions = ({ route }: { route: any }) => {
           />
         </View>
 
-        <ThankYouModal 
+        <ValidationModal 
           visible={isModalVisible} 
           onClose={() => setIsModalVisible(false)} 
           onDownload={() => setIsModalVisible(false)} 

@@ -9,15 +9,17 @@ import {
 } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import CustomButton from './CustomButton';
+import { useNavigation } from '@react-navigation/native';
+import { RootStackNavigation } from '../navigation/types';
 
-interface ThankYouModalProps {
+interface ValidationModalProps {
     visible: boolean;
     onClose: () => void;
     onDownload: () => void;
-    navigation: any;
 }
 
-const ThankYouModal: React.FC<ThankYouModalProps> = ({ visible, onClose, onDownload, navigation }) => {
+const ValidationModal: React.FC<ValidationModalProps> = ({ visible, onClose, onDownload }) => {
+    const navigation = useNavigation<RootStackNavigation>();
     const [tickPosition] = useState(new Animated.Value(0));
 
     useEffect(() => {
@@ -146,4 +148,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default ThankYouModal;
+export default ValidationModal;
