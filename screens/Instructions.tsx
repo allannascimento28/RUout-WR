@@ -1,10 +1,8 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   Image,
   TouchableOpacity,
   ScrollView,
@@ -28,7 +26,6 @@ import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '../config';
 
-
 interface AudioRecording {
   uri: string;
   name: string;
@@ -39,55 +36,104 @@ interface AudioRecording {
 const Instructions = ({ route }: { route: any }) => {
   const navigation = useNavigation<RootStackNavigation>();
   const incidentId = route.params?.incidentId;
-  const { authToken } = useAuth();
+  const { authState } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Simple state for button selections
+  const [selections, setSelections] = useState({
+    allClear: null, // null, true, false
+    refusals: null,
+    personWithDisability: null,
+    signOfDanger: null,
+  });
+
+  // Data states
   const [refusalsData, setRefusalsData] = useState({ noOfRefusals: '', location: '' });
   const [personWithDisabilityData, setPersonWithDisabilityData] = useState({noOfPersonWithDisability: '', descriptionAndLocation: ''});
   const [signOfDangerData, setSignOfDangerData] = useState({signOfDanger: ''});
   const [additionalDetails, setAdditionalDetails] = useState({notes: ''});
-  const [mediaFiles, setMediaFiles] = useState([]);
-   const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
+  const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
 
-  const [completedSections, setCompletedSections] = useState({
-    refusals: false,
-    personWithDisability: false,
-    signOfDanger: false,
-    additionalDetails: false,
-    audioRecordings: false,
-  });
+  // Check if form can be submitted
+  const canSubmit = selections.allClear === true || 
+    (selections.refusals !== null && selections.personWithDisability !== null && selections.signOfDanger !== null);
 
-  const markComplete = (key: keyof typeof completedSections) =>
-    setCompletedSections(prev => ({ ...prev, [key]: true }));
+  const handleButtonPress = (section: string, value: boolean) => {
+    if (section === 'allClear' && value) {
+      // If All Clear is Yes, set all to No
+      setSelections({
+        allClear: true,
+        refusals: false,
+        personWithDisability: false,
+        signOfDanger: false,
+      });
+    } else {
+      setSelections(prev => ({
+        ...prev,
+        [section]: value,
+        // If any other section is changed, clear All Clear
+        ...(section !== 'allClear' && { allClear: false })
+      }));
+
+      // Navigate to screens if Yes is selected
+      if (value && section !== 'allClear') {
+        const navigationMap = {
+          refusals: () => navigation.navigate('Refusals', {
+            data: refusalsData,
+            setData: setRefusalsData,
+            onComplete: () => {}
+          }),
+          personWithDisability: () => navigation.navigate('PersonWithDisability', {
+            data: personWithDisabilityData,
+            setData: setPersonWithDisabilityData,
+            onComplete: () => {}
+          }),
+          signOfDanger: () => navigation.navigate('SignOfDanger', {
+            data: signOfDangerData,
+            setData: setSignOfDangerData,
+            onComplete: () => {}
+          })
+        };
+        navigationMap[section]?.();
+      }
+    }
+  };
 
   const handleSubmit = async () => {
-    const token = authToken;
+    setIsSubmitting(true);
+    const token = authState.authToken;
     const formData = new FormData();
 
-    formData.append('refusal[status]', 'true');
-    formData.append('refusal[no_of_refusal]', refusalsData.noOfRefusals);
-    formData.append('refusal[location]', refusalsData.location);
+    // Build form data based on selections
+    formData.append('refusal[status]', selections.refusals ? 'true' : 'false');
+    if (selections.refusals) {
+      formData.append('refusal[no_of_refusal]', refusalsData.noOfRefusals);
+      formData.append('refusal[location]', refusalsData.location);
+    }
 
-    formData.append('disability[status]', 'true');
-    formData.append('disability[no_of_person]', personWithDisabilityData.noOfPersonWithDisability);
-    formData.append('disability[description]', personWithDisabilityData.descriptionAndLocation);
+    formData.append('disability[status]', selections.personWithDisability ? 'true' : 'false');
+    if (selections.personWithDisability) {
+      formData.append('disability[no_of_person]', personWithDisabilityData.noOfPersonWithDisability);
+      formData.append('disability[description]', personWithDisabilityData.descriptionAndLocation);
+    }
 
-    formData.append('sign_of_danger[status]', 'true');
-    formData.append('sign_of_danger[sign_of_danger]', signOfDangerData.signOfDanger);
+    formData.append('sign_of_danger[status]', selections.signOfDanger ? 'true' : 'false');
+    if (selections.signOfDanger) {
+      formData.append('sign_of_danger[sign_of_danger]', signOfDangerData.signOfDanger);
+    }
 
     formData.append('additional[status]', 'true');
     formData.append('additional[notes]', additionalDetails.notes);
 
-    formData.append("media[status]", "true");
-
+    formData.append("media[status]", audioRecordings.length > 0 ? "true" : "false");
     for (const recording of audioRecordings) {
       formData.append('media[record][]', {
         uri: recording.uri,
-        type: 'audio/x-wav', // or 'audio/m4a', adjust based on your recorder output
+        type: 'audio/x-wav',
         name: recording.name,
       });
     }
-
 
     try {
       const response = await axios.put(`${BASE_URL}/user/incident-type/${incidentId}`, formData, {
@@ -98,7 +144,6 @@ const Instructions = ({ route }: { route: any }) => {
       });
 
       if (response.status === 200) {
-        console.log("Response :: ", response.data)
         setIsModalVisible(true);
       } else {
         Alert.alert('Error', 'Failed to submit');
@@ -106,67 +151,36 @@ const Instructions = ({ route }: { route: any }) => {
     } catch (error) {
       console.error('Submit error:', error);
       Alert.alert('Error', 'Something went wrong during submission');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const buttonItems = [
-    {
-      title: 'All Clear',
-      image: TickImage,
-      onPress: () => {}, // dummy
-      colour: '#FF1C1C',
-    },
-    {
-      title: 'Refusals',
-      image: CrossImage,
-      onPress: () =>
-        navigation.navigate('Refusals', {
-          data: refusalsData,
-          setData: setRefusalsData,
-          onComplete: () => markComplete('refusals'),
-        }),
-      colour: completedSections.refusals ? '#FF0000' : '#fe8d8d',
-    },
-    {
-      title: 'Person with a Disability',
-      image: WheelChairImage,
-      onPress: () =>
-        navigation.navigate('PersonWithDisability', {
-          data: personWithDisabilityData,
-          setData: setPersonWithDisabilityData,
-          onComplete: () => markComplete('personWithDisability'),
-        }),
-      colour: completedSections.personWithDisability ? '#FF0000' : '#fe8d8d',
-    },
-    {
-      title: 'Is there any Sign of Danger?',
-      image: FireImage,
-      onPress: () =>
-        navigation.navigate('SignOfDanger', {
-          data: signOfDangerData,
-          setData: setSignOfDangerData,
-          onComplete: () => markComplete('signOfDanger'),
-        }),
-      colour: completedSections.signOfDanger ? '#FF0000' : '#fe8d8d',
-    },
+    { key: 'allClear', title: 'All Clear', image: TickImage },
+    { key: 'refusals', title: 'Refusals', image: CrossImage },
+    { key: 'personWithDisability', title: 'Person with a Disability', image: WheelChairImage },
+    { key: 'signOfDanger', title: 'Is there any Sign of Danger?', image: FireImage },
   ];
 
-  const listItem = [
+  const listItems = [
     {
       title: 'Additional Details and Requests',
       image: EditImage,
-      route: 'AdditionalDetails',
-      completeKey: 'additionalDetails',
-      setData: setAdditionalDetails,
-      data: additionalDetails,
+      onPress: () => navigation.navigate('AdditionalDetails', {
+        data: additionalDetails,
+        setData: setAdditionalDetails,
+        onComplete: () => {}
+      })
     },
     {
       title: 'Media Files',
       image: MediaImage,
-      route: 'MediaFiles',
-      completeKey: 'audioRecordings',
-      setData: setAudioRecordings,
-      data: audioRecordings,
+      onPress: () => navigation.navigate('MediaFiles', {
+        data: audioRecordings,
+        setData: setAudioRecordings,
+        onComplete: () => {}
+      })
     },
   ];
 
@@ -174,36 +188,47 @@ const Instructions = ({ route }: { route: any }) => {
     <View style={styles.screen}>
       <CustomHeader title="Level 1 South 1" />
       <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 100 }}>
-        {buttonItems.map((item, index) => (
-          <View style={styles.container} key={index}>
-            <View style={styles.imageContainer}>
-              <Image source={item.image} style={styles.image} />
-              <Text style={styles.title}>{item.title}</Text>
+        
+        {buttonItems.map((item) => {
+          const selection = selections[item.key];
+          const yesSelected = selection === true;
+          const noSelected = selection === false;
+          
+          return (
+            <View style={styles.container} key={item.key}>
+              <View style={styles.imageContainer}>
+                <Image source={item.image} style={styles.image} />
+                <Text style={styles.title}>{item.title}</Text>
+              </View>
+              <View style={styles.buttonRow}>
+                <TouchableOpacity
+                  onPress={() => handleButtonPress(item.key, true)}
+                  style={[
+                    styles.yesButton,
+                    { backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
+                    noSelected && styles.disabledButton
+                  ]}
+                >
+                  <Text style={styles.buttonText}>Yes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  onPress={() => handleButtonPress(item.key, false)}
+                  style={[
+                    styles.noButton,
+                    noSelected && styles.activeNoButton
+                  ]}
+                >
+                  <Text style={styles.buttonText}>No</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.buttonRow}>
-              <TouchableOpacity
-                onPress={item.onPress}
-                style={[styles.yesButton, { backgroundColor: item.colour }]}
-              >
-                <Text style={styles.buttonText}>Yes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.noButton}>
-                <Text style={styles.buttonText}>No</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        ))}
+          );
+        })}
 
-        {listItem.map((item, index) => (
+        {listItems.map((item, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() =>
-              navigation.navigate(item.route, {
-                data: item.data,
-                setData: item.setData,
-                onComplete: () => markComplete(item.completeKey),
-              })
-            }
+            onPress={item.onPress}
             style={styles.belowContainer}
           >
             <View style={styles.imageContainer}>
@@ -217,15 +242,19 @@ const Instructions = ({ route }: { route: any }) => {
         ))}
 
         <View style={styles.submitButton}>
-          <CustomButton title="SUBMIT" onPress={handleSubmit} />
+          <CustomButton 
+            title="SUBMIT"
+            onPress={handleSubmit} 
+            disabled={isSubmitting || !canSubmit}
+            loading={isSubmitting}
+          />
         </View>
 
         <ThankYouModal 
           visible={isModalVisible} 
           onClose={() => setIsModalVisible(false)} 
           onDownload={() => setIsModalVisible(false)} 
-        //   navigation={navigation} 
-        navigation={() =>{}}
+          navigation={() => {}}
         />
       </ScrollView>
     </View>
@@ -303,6 +332,12 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     alignItems: 'center',
   },
+  activeNoButton: {
+    backgroundColor: '#34C759',
+  },
+  disabledButton: {
+    opacity: 0.5,
+  },
   buttonText: {
     color: 'white',
     fontSize: 13,
@@ -314,4 +349,3 @@ const styles = StyleSheet.create({
 });
 
 export default Instructions;
-

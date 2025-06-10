@@ -18,7 +18,6 @@ import CustomHeader from '../components/CustomHeader';
 import { scale, verticalScale } from 'react-native-size-matters';
 import axios from 'axios';
 import { BASE_URL } from '../config';
-import { useAuth } from '../context/AuthContext';
 
 interface AudioRecording {
   uri: string;

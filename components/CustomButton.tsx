@@ -1,20 +1,31 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';    
 
 interface CustomButtonProps {
     title: string;
     onPress: () => void;
     style?: any;
+    disabled?: boolean;
+    loading?: boolean;
 }
     
-const CustomButton = ({ title, onPress, style }: CustomButtonProps) => {
+const CustomButton = ({ title, onPress, style, disabled = false, loading = false }: CustomButtonProps) => {
     return (
         <TouchableOpacity
-            style={[styles.button, style]}
+            style={[
+                styles.button, 
+                style,
+                disabled && styles.disabledButton
+            ]}
             onPress={onPress}
+            disabled={disabled || loading}
         >
-            <Text style={styles.buttonText}>{title}</Text>
+            {loading ? (
+                <ActivityIndicator size="small" color="#FFFFFF" />
+            ) : (
+                <Text style={styles.buttonText}>{title}</Text>
+            )}
         </TouchableOpacity>
     )
 }
@@ -29,10 +40,15 @@ const styles = StyleSheet.create({
         borderRadius: 30, 
         alignItems: 'center',
         justifyContent: 'center',
+        minHeight: 48, 
     },
     buttonText: {
         color: '#F6FDFF',
         fontSize: 16,
         fontFamily: 'Manrope-Bold',
     },
+    disabledButton: {
+        backgroundColor: '#99C5E4',
+        opacity: 0.7,
+    }
 })

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, use, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Define the shape of the context
@@ -8,71 +8,120 @@ type IncidentType = {
   title: string;
 };
 
-type AuthContextType = {
+interface AuthState {
   authToken: string | null;
-  setAuthToken: (token: string | null) => void;
-  logout: () => void;
   incidentTypes: IncidentType[];
-  setIncidentTypes: (types: IncidentType[]) => void;
+}
+
+type AuthContextType = {
+  authState: AuthState;
+  updateAuthState: (updates: Partial<AuthState>) => void;
+  setAuthState: React.Dispatch<React.SetStateAction<AuthState>>;
 };
 
+const initialAuthState: AuthState = {
+  authToken: null,
+  incidentTypes: [],
+};
 
 
 
 // Create the context with default values
 const AuthContext = createContext<AuthContextType>({
-  authToken: null,
-  setAuthToken: () => {},
-  logout: () => {},
-  incidentTypes: [],
-  setIncidentTypes: () => {},
+  authState: initialAuthState,
+  updateAuthState: () => {},
+  setAuthState: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [authToken, setAuthTokenState] = useState<string | null>(null);
-  const [incidentTypes, setIncidentTypes] = useState<IncidentType[]>([]);
+  const [authState, setAuthState] = useState<AuthState>(initialAuthState);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    const loadToken = async () => {
+
+    const loadAuthState = async () => {
       try {
-        const token = await AsyncStorage.getItem("authToken");
-        if (token) {
-          setAuthTokenState(token);
+        setAuthState({
+          ...initialAuthState,
+          incidentTypes: [],
+        });
+        const [authToken, incidentTypes] = await Promise.all([
+          AsyncStorage.getItem("authToken"),
+          AsyncStorage.getItem("incidentTypes"),
+        ]);
+        if (authToken) {
+          const newState: AuthState = {
+            authToken,
+            incidentTypes: incidentTypes ? JSON.parse(incidentTypes) : [],
+          };
+          setAuthState(newState);
         }
       } catch (error) {
-        console.error("Failed to load auth token from storage", error);
+        console.error("Failed to load auth state from storage", error);
+      } finally {
+        setIsInitialized(true);
       }
     };
-
-    loadToken();
+    loadAuthState();
   }, []);
 
-  const setAuthToken = async (token: string | null) => {
-    try {
-      if (token) {
-        await AsyncStorage.setItem("authToken", token);
-        
-      } else {
-        await AsyncStorage.removeItem("authToken");
+  useEffect(() => {
+    const persistAuthState = async () => {
+      try {
+        await AsyncStorage.setItem("authToken", authState.authToken || "");
+        await AsyncStorage.setItem(
+          "incidentTypes",
+          JSON.stringify(authState.incidentTypes)
+        );
+      } catch (error) {
+        console.error("Failed to persist auth state", error);
       }
-      setAuthTokenState(token);
-    } catch (error) {
-      console.error("Failed to save auth token", error);
+    };
+    if (isInitialized) {
+      persistAuthState();
     }
+  }, [authState, isInitialized]);
+
+  const contextValue: AuthContextType = {
+    authState,
+    updateAuthState: (updates: Partial<AuthState>) => {
+      setAuthState((prev) => ({ ...prev, ...updates }));
+    },
+    setAuthState,
   };
 
-
-
-
-  const logout = async () => {
-    await setAuthToken(null);
-  };
 
   return (
-    <AuthContext.Provider value={{ authToken, setAuthToken, logout, incidentTypes, setIncidentTypes }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+
+export const useLogout = () => {
+  const { setAuthState } = useAuth();
+
+  return useCallback(async () => {
+    try {
+      console.log('Logging out user...');
+      const keys = await AsyncStorage.getAllKeys();
+      const authKeys = keys.filter(key => key.startsWith('auth_'));
+      await AsyncStorage.multiRemove(authKeys);
+
+      setAuthState(initialAuthState);
+      console.log('User logged out successfully');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  }, [setAuthState]);
+};
+

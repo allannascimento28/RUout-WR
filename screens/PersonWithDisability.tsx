@@ -17,7 +17,6 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
 import { BASE_URL } from "../config";
-import { useAuth } from "../context/AuthContext";
 
 const PersonWithDisability = ({ navigation, route }: { navigation: any, route: any }) => {
   const {data, setData, onComplete } = route.params;
@@ -112,13 +111,15 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
                   errorMessage={descriptionError}
                 />
               </View>
-
-              <View style={styles.buttonContainer}>
-                <CustomButton title="SAVE" onPress={handleSave} />
-              </View>
             </View>
           {/* </TouchableWithoutFeedback> */}
         </ScrollView>
+        <View style={styles.buttonContainer}>
+          <CustomButton
+            title="SAVE"
+            onPress={handleSave}
+          />
+        </View>
       </KeyboardAvoidingView>
     </View>
   )
@@ -148,10 +149,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   buttonContainer: {
-    marginTop: 20,
-    marginBottom: 20,
+    flex: 1,
     position: 'absolute',
-    bottom: 0,
+    bottom: 32,
+    padding: 16,
     width: '100%',
   },
 });

@@ -36,7 +36,7 @@ const InstructionScreen: React.FC<InstructionScreenProps> = ({
       {/* Top-left Cancel Button */}
       <TouchableOpacity 
         style={styles.cancelButton}
-        onPress={() => navigation.goBack()} 
+        onPress={() => navigation.navigate('Tabs', { screen: 'Watch' })} // Navigate to Home screen within Tabs
       >
         <Text style={styles.cancelButtonText}>Cancel</Text>
       </TouchableOpacity>
@@ -68,55 +68,55 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
-    marginTop: Platform.OS === 'ios' ? verticalScale(40) : StatusBar.currentHeight || verticalScale(0),
+    marginTop: Platform.OS === 'ios' ? 40 : StatusBar.currentHeight || 0,
     
   },
   content: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: scale(16),
-    paddingVertical: verticalScale(24),
+    paddingHorizontal: 16,
+    paddingVertical: 24,
   },
   image: {
-    width: scale(200),
-    height: verticalScale(200),
+    width: 200,
+    height: 200,
   },
   heading: {
-    fontSize: moderateScale(32),
+    fontSize: 32,
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: verticalScale(40),
+    marginBottom: 40,
   },
   nextButton: {
     position: 'absolute',
-    top: verticalScale(20),
-    right: scale(20),
+    top: 20,
+    right: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingVertical: verticalScale(8),
-    paddingHorizontal: scale(16),
-    borderRadius: moderateScale(20),
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
     zIndex: 10,
   },
   nextButtonText: {
     color: 'white',
-    fontSize: moderateScale(16),
+    fontSize: 16,
     fontWeight: 'bold',
   },
   cancelButton: {
     position: 'absolute',
-    top: verticalScale(20),
-    left: scale(20),
+    top: 20,
+    left: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingVertical: verticalScale(8),
-    paddingHorizontal: scale(16),
-    borderRadius: moderateScale(20),
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
     zIndex: 10,
   },
   cancelButtonText: {
     color: 'white',
-    fontSize: moderateScale(16),
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

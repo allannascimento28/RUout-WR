@@ -6,7 +6,6 @@ import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
 import { BASE_URL } from "../config";
-import { useAuth } from "../context/AuthContext";
 import { useNavigation } from "@react-navigation/native";
 
 

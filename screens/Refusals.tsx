@@ -75,12 +75,12 @@ const Refusals = ({ route, navigation }) => {
                 numberOfLines={4}
                 errorMessage={locationError}
               />
-              <View style={styles.buttonContainer}>
-                <CustomButton title="SAVE" onPress={handleSave} />
-              </View>
             </View>
           {/* </TouchableWithoutFeedback> */}
         </ScrollView>
+        <View style={styles.buttonContainer}>
+          <CustomButton title="SAVE" onPress={handleSave} />
+        </View>
       </KeyboardAvoidingView>
     </View>
   );
@@ -101,7 +101,11 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   buttonContainer: {
-    marginTop: 20,
+    flex: 1,
+    position: 'absolute',
+    bottom: 32,
+    padding: 16,
+    width: '100%',
   },
 });
 

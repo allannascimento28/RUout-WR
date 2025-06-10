@@ -12,6 +12,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { moderateScale, scale } from "react-native-size-matters";
@@ -26,7 +27,7 @@ import { RootStackNavigation } from "../navigation/types";
 const Login = () => {
   const { width, height } = useWindowDimensions();
   const navigation = useNavigation<RootStackNavigation>();
-  const { setAuthToken, setIncidentTypes } = useAuth();
+  const { authState, updateAuthState } = useAuth();
 
   const isLargeScreen = width > 768;
   const isExtraLargeScreen = width > 1200;
@@ -36,8 +37,10 @@ const Login = () => {
   const [userNameError, setUserNameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [authError, setAuthError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+    setLoading(true);
     const isUserNameEmpty = userName.trim() === "";
     const isPasswordEmpty = password.trim() === "";
 
@@ -58,12 +61,16 @@ const Login = () => {
           title: item.incidentTypeSourceId,
         }));
 
-        await setIncidentTypes(incidentTypesId);
-        await setAuthToken(token);
+        updateAuthState({
+          authToken: token,
+          incidentTypes: incidentTypesId,
+        });
+        setLoading(false);
         navigation.navigate("Tabs");
       } catch (error: any) {
         const msg = error.response?.data?.msg || "Login failed. Try again.";
         setAuthError(msg);
+        setLoading(false);
         Alert.alert("Login Failed", msg);
       }
     }
@@ -121,7 +128,7 @@ const Login = () => {
               {authError ? <Text style={styles.errorText}>{authError}</Text> : null}
 
               <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Continue</Text>
+                {loading ? <ActivityIndicator size="small" color="#fff" /> : <Text style={styles.buttonText}>Continue</Text>} 
               </TouchableOpacity>
             </View>
 
