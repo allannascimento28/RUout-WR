@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import Feather from '@expo/vector-icons/Feather';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigation } from '../navigation/types';
 

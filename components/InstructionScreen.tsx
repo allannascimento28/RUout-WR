@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ImageSourcePropType, Platform, StatusBar } from 'react-native';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomShareButton from './CustomShareButton';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';

@@ -1,6 +1,5 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface CustomShareButtonProps {

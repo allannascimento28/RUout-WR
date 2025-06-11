@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback, Platform, Keyboard, Alert } from "react-native";
-import { scale, verticalScale } from "react-native-size-matters";
+import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, Alert, ScrollView } from "react-native";
 import CustomHeader from "../components/CustomHeader";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
@@ -42,10 +41,13 @@ const SignOfDanger = ({ route }: { route: any }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       keyboardVerticalOffset={Platform.OS === 'ios' ? headerHeight + 20 : 0}
     >
-      {/* <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
         <View style={styles.screen}>
           <CustomHeader title="Sign of Danger" />
 
+          <ScrollView
+           contentContainerStyle={styles.scrollViewContent} // Use contentContainerStyle
+            keyboardDismissMode="on-drag"
+          >
           <View style={styles.contentContainer}>
             <CustomInput
               label="Sign of Danger Description"
@@ -60,8 +62,8 @@ const SignOfDanger = ({ route }: { route: any }) => {
           <View style={styles.buttonContainer}>
             <CustomButton title="SAVE" onPress={handleSave} />
           </View>
+          </ScrollView>
         </View>
-      {/* </TouchableWithoutFeedback> */}
     </KeyboardAvoidingView>
     )
 }
@@ -78,6 +80,9 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         paddingHorizontal: 16,
+    },
+    scrollViewContent: {
+        flexGrow: 1,
     },
     buttonContainer: {
         padding: 16,

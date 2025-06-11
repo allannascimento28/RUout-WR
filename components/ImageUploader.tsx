@@ -14,12 +14,11 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { scale } from 'react-native-size-matters';
 import axios from 'axios';
 import { BASE_URL } from '../config';
 
 const { width: screenWidth } = Dimensions.get('window');
-const boxSize = scale(95);
+const boxSize = 95;
 const numColumns = Math.floor(screenWidth / (boxSize + 16));
 
 interface ImageData {
@@ -29,11 +28,8 @@ interface ImageData {
   uploadError?: boolean;
 }
 
-interface ImageUploaderProps {
-  incidentId: string;
-}
 
-const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
+const ImageUploader: React.FC = () => {
 
   const [images, setImages] = useState<ImageData[]>([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
@@ -124,9 +120,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ }) => {
       
       setImages(prev => [...prev, ...newImages]);
       
-      for (const imageData of newImages) {
-        uploadSingleImage(imageData);
-      }
+      // for (const imageData of newImages) {
+      //   uploadSingleImage(imageData);
+      // }
     }
     setShowUploadOptions(false);
   };

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Video, AVPlaybackStatus } from 'expo-av';

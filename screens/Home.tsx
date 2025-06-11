@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'rea
 import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigation } from '../navigation/types';
 import { loadFonts } from '../assets/fonts/Fonts';
-import { scale, verticalScale } from 'react-native-size-matters';
 
 const Home = () => {
   const navigation = useNavigation<RootStackNavigation>();

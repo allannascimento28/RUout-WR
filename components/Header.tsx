@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const Header = () => {
   
   return (
-    <SafeAreaView style={[styles.safeArea]}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         {/* Center Text */}
         <Text style={styles.headerText}>Save Time, Save Life</Text>
@@ -27,15 +27,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    height: 70,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
     position: 'relative',
-    elevation: 3,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowOffset: { width: 0, height: 10  },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 4, 
+    height: 70,
   },
   headerText: {
     color: '#3392CC',

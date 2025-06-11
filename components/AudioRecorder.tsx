@@ -19,9 +19,8 @@ interface AudioRecorderProps {
 const AudioRecorder: React.FC<AudioRecorderProps> = ({ onClose, onSave }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [audioURI, setAudioURI] = useState<string | null>(null);
-  const [seconds, setSeconds] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const recordingRef = useRef<Audio.Recording | null>(null);
   const soundRef = useRef<Audio.Sound | null>(null);
@@ -64,28 +63,29 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onClose, onSave }) => {
 
   const startRecording = async () => {
     try {
-      const hasPermission = await requestPermissions();
-      if (!hasPermission) return;
+      const permission = await requestPermissions();
+      if (!permission) {
+        return;
+      }
 
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-
-      const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
-      await recording.startAsync();
-
-      recordingRef.current = recording;
+      console.log('Starting recording...');
+      recordingRef.current = new Audio.Recording();
+      await recordingRef.current.prepareToRecordAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+      await recordingRef.current.startAsync();
+      
       setIsRecording(true);
-      setSeconds(0);
+      setDuration(0);
+      
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
 
       timerRef.current = setInterval(() => {
-        setSeconds(prev => prev + 1);
+        setDuration(prev => prev + 1);
       }, 1000);
     } catch (error) {
       Alert.alert('Error', 'Could not start recording');
-      console.error('Recording error:', error);
+      console.error('Start recording error:', error);
     }
   };
 
@@ -93,23 +93,46 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onClose, onSave }) => {
     try {
       if (!recordingRef.current) return;
 
+      // Stop recording but keep it loaded
       await recordingRef.current.stopAndUnloadAsync();
       const uri = recordingRef.current.getURI();
       
       if (uri) {
+        console.log('Recording URI:', uri); // Debug log
         setAudioURI(uri);
-        setDuration(seconds);
+        setDuration(duration);
       }
 
-      recordingRef.current = null;
+      // Clean up
       setIsRecording(false);
-      
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
     } catch (error) {
       Alert.alert('Error', 'Could not stop recording');
       console.error('Stop recording error:', error);
+    }
+  };
+
+  const save = () => {
+    try {
+      if (!audioURI) {
+        Alert.alert('Error', 'No recording to save');
+        return;
+      }
+
+      // Unload the recording now that we're saving it
+      if (recordingRef.current) {
+        recordingRef.current.stopAndUnloadAsync();
+        recordingRef.current = null;
+      }
+
+      // Save the recording
+      onSave(audioURI, duration);
+      onClose();
+    } catch (error) {
+      Alert.alert('Error', 'Failed to save recording');
+      console.error('Save error:', error);
     }
   };
 
@@ -153,16 +176,8 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onClose, onSave }) => {
     }
     setIsRecording(false);
     setAudioURI(null);
-    setSeconds(0);
     setDuration(0);
     onClose();
-  };
-
-  const save = () => {
-    if (audioURI) {
-      onSave(audioURI, duration);
-      onClose();
-    }
   };
 
   return (
@@ -186,7 +201,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onClose, onSave }) => {
           </View>
 
           {/* Timer */}
-          <Text style={styles.timer}>{formatTime(seconds)}</Text>
+          <Text style={styles.timer}>{formatTime(duration)}</Text>
 
           {/* Control Button */}
           <TouchableOpacity
@@ -233,81 +248,157 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onClose, onSave }) => {
   );
 };
 
+export default AudioRecorder;
+
 const styles = StyleSheet.create({
+
   overlay: {
+
     flex: 1,
+
     backgroundColor: 'rgba(0,0,0,0.4)',
+
     alignItems: 'center',
+
     justifyContent: 'center',
+
   },
+
   container: {
+
     backgroundColor: 'white',
+
     borderRadius: 12,
+
     padding: 24,
+
     width: 320,
+
     alignItems: 'center',
+
     shadowColor: '#000',
+
     shadowOffset: { width: 0, height: 2 },
+
     shadowOpacity: 0.25,
+
     shadowRadius: 8,
+
     elevation: 8,
+
   },
+
   title: {
+
     fontSize: 18,
+
     fontWeight: '600',
+
     marginBottom: 16,
+
     color: '#1F2937',
+
   },
+
   micContainer: {
+
     marginBottom: 16,
+
   },
+
   timer: {
+
     fontSize: 18,
+
     fontFamily: 'monospace',
+
     marginBottom: 24,
+
     color: '#1F2937',
+
   },
+
   controlButton: {
+
     marginBottom: 24,
+
     backgroundColor: '#F3F4F6',
+
     borderRadius: 40,
+
     width: 80,
+
     height: 80,
+
     alignItems: 'center',
+
     justifyContent: 'center',
+
   },
+
   actionButtons: {
+
     flexDirection: 'row',
+
     gap: 16,
+
     width: '100%',
+
   },
+
   button: {
+
     flex: 1,
+
     paddingVertical: 12,
+
     borderRadius: 25,
+
     alignItems: 'center',
+
   },
+
   saveButton: {
+
     backgroundColor: '#BFDBFE',
+
   },
+
   cancelButton: {
+
     backgroundColor: '#BFDBFE',
+
     borderWidth: 1,
+
     borderColor: '#D1D5DB',
+
   },
+
   disabledButton: {
+
     backgroundColor: '#F3F4F6',
+
   },
+
   buttonText: {
+
     fontSize: 16,
+
     fontWeight: '500',
+
   },
+
   saveButtonText: {
+
     color: '#6B7280',
+
   },
+
   cancelButtonText: {
+
     color: '#374151',
+
   },
+
 });
 
-export default AudioRecorder;

@@ -1,13 +1,10 @@
-import React, { use, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator, Alert, Platform } from 'react-native';
-import { scale, verticalScale } from 'react-native-size-matters';
+import React, { useEffect, useState } from 'react';
+import { View,Text, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { TabNavigation } from '../navigation/types';
 import { RootStackParamList } from '../navigation/types';
 import CustomHeader from '../components/CustomHeader';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import axios from 'axios';
-import { BASE_URL } from '../config';
 import { useAuth, useLogout } from '../context/AuthContext';
 
 type Props = {

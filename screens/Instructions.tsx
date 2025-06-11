@@ -8,7 +8,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import ThankYouModal from '../components/ValidationModal';
+import ValidationModal from '../components/ValidationModal';
 import { useNavigation } from '@react-navigation/native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
@@ -68,7 +68,7 @@ const Instructions = ({ route }: { route: any }) => {
       setSelections(prev => ({
         ...prev,
         [section]: value,
-        ...(section !== 'allClear' && { allClear: false })
+        ...(section !== 'allClear' && value === true ? { allClear: false } : {})
       }));
 
       if (value && section !== 'allClear') {
@@ -76,17 +76,23 @@ const Instructions = ({ route }: { route: any }) => {
           refusals: () => navigation.navigate('Refusals', {
             data: refusalsData,
             setData: setRefusalsData,
-            onComplete: () => {}
+            onComplete: () => {
+              setSelections(prev => ({...prev, refusals: true}));
+            }
           }),
           personWithDisability: () => navigation.navigate('PersonWithDisability', {
             data: personWithDisabilityData,
             setData: setPersonWithDisabilityData,
-            onComplete: () => {}
+            onComplete: () => {
+              setSelections(prev => ({...prev, personWithDisability: true}));
+            }
           }),
           signOfDanger: () => navigation.navigate('SignOfDanger', {
             data: signOfDangerData,
             setData: setSignOfDangerData,
-            onComplete: () => {}
+            onComplete: () => {
+              setSelections(prev => ({...prev, signOfDanger: true}));
+            }
           })
         };
         navigationMap[section]?.();
@@ -95,6 +101,7 @@ const Instructions = ({ route }: { route: any }) => {
   };
 
   const handleSubmit = async () => {
+    console.log("Audio Recordings:", audioRecordings)
     setIsSubmitting(true);
     const token = authState.authToken;
     const formData = new FormData();
@@ -120,12 +127,26 @@ const Instructions = ({ route }: { route: any }) => {
     formData.append('additional[notes]', additionalDetails.notes);
 
     formData.append("media[status]", audioRecordings.length > 0 ? "true" : "false");
-    for (const recording of audioRecordings) {
-      formData.append('media[record][]', {
-        uri: recording.uri,
-        type: 'audio/x-wav',
-        name: recording.name,
-      });
+
+    // Convert audio recordings to Blob and append to FormData
+    if (audioRecordings.length > 0) {
+      try {
+        const promises = audioRecordings.map(async (recording) => {
+          try {
+            const response = await fetch(recording.uri);
+            const blob = await response.blob();
+            formData.append('media[record][]', blob, recording.name);
+          } catch (error) {
+            console.error(`Error processing recording ${recording.name}:`, error);
+            throw error;
+          }
+        });
+        await Promise.all(promises);
+      } catch (error) {
+        console.error('Error processing audio recordings:', error);
+        Alert.alert('Error', 'Failed to process audio recordings');
+        return;
+      }
     }
 
     try {
@@ -139,7 +160,7 @@ const Instructions = ({ route }: { route: any }) => {
       if (response.status === 200) {
         setIsModalVisible(true);
       } else {
-        Alert.alert('Error', 'Failed to submit');
+        Alert.alert('Error', `Server responded with status ${response.status}`);
       }
     } catch (error) {
       console.error('Submit error:', error);
@@ -170,9 +191,10 @@ const Instructions = ({ route }: { route: any }) => {
       title: 'Media Files',
       image: MediaImage,
       onPress: () => navigation.navigate('MediaFiles', {
-        data: audioRecordings,
+        data: { audioRecordings },
         setData: setAudioRecordings,
-        onComplete: () => {}
+        onComplete: () => {},
+        incidentId: incidentId
       })
     },
   ];
@@ -187,6 +209,8 @@ const Instructions = ({ route }: { route: any }) => {
           const yesSelected = selection === true;
           const noSelected = selection === false;
           
+          const isDisabledByAllClear = item.key !== 'allClear' && selections.allClear === true;
+          
           return (
             <View style={styles.container} key={item.key}>
               <View style={styles.imageContainer}>
@@ -198,9 +222,12 @@ const Instructions = ({ route }: { route: any }) => {
                   onPress={() => handleButtonPress(item.key, true)}
                   style={[
                     styles.yesButton,
-                    { backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
-                    noSelected && styles.disabledButton
+                    item.key === "allClear"
+                      ? { backgroundColor: yesSelected ? '#a0dca0' :'#34C759' }
+                      : { backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
+                    (noSelected || isDisabledByAllClear) && styles.disabledButton
                   ]}
+                  // disabled={isDisabledByAllClear}
                 >
                   <Text style={styles.buttonText}>Yes</Text>
                 </TouchableOpacity>
@@ -208,8 +235,12 @@ const Instructions = ({ route }: { route: any }) => {
                   onPress={() => handleButtonPress(item.key, false)}
                   style={[
                     styles.noButton,
-                    noSelected && styles.activeNoButton
+                    item.key === "allClear"
+                      ? { backgroundColor: noSelected ? '#FF1C1C' : '#fe8d8d' }
+                      : { backgroundColor: noSelected ? '#a0dca0': '#34C759' },
+                    isDisabledByAllClear && styles.disabledButton
                   ]}
+                  // disabled={isDisabledByAllClear}
                 >
                   <Text style={styles.buttonText}>No</Text>
                 </TouchableOpacity>
@@ -243,7 +274,7 @@ const Instructions = ({ route }: { route: any }) => {
           />
         </View>
 
-        <ThankYouModal 
+        <ValidationModal 
           visible={isModalVisible} 
           onClose={() => setIsModalVisible(false)} 
           onDownload={() => setIsModalVisible(false)} 
