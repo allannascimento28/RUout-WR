@@ -214,7 +214,9 @@ const Instructions = ({ route }: { route: any }) => {
                   onPress={() => handleButtonPress(item.key, true)}
                   style={[
                     styles.yesButton,
-                    { backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
+                    item.key === "allClear"
+                      ? { backgroundColor: yesSelected ? '#a0dca0' :'#34C759'  }
+                      :{ backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
                     noSelected && styles.disabledButton
                   ]}
                 >
@@ -224,7 +226,9 @@ const Instructions = ({ route }: { route: any }) => {
                   onPress={() => handleButtonPress(item.key, false)}
                   style={[
                     styles.noButton,
-                    noSelected && styles.activeNoButton
+                    item.key === "allClear"
+                      ? { backgroundColor: noSelected ? '#FF1C1C' : '#fe8d8d' } 
+                      :{ backgroundColor: noSelected ? '#a0dca0': '#34C759' },
                   ]}
                 >
                   <Text style={styles.buttonText}>No</Text>
