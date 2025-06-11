@@ -68,7 +68,7 @@ const Instructions = ({ route }: { route: any }) => {
       setSelections(prev => ({
         ...prev,
         [section]: value,
-        ...(section !== 'allClear' && { allClear: false })
+        ...(section !== 'allClear' && value === true ? { allClear: false } : {})
       }));
 
       if (value && section !== 'allClear') {
@@ -76,17 +76,23 @@ const Instructions = ({ route }: { route: any }) => {
           refusals: () => navigation.navigate('Refusals', {
             data: refusalsData,
             setData: setRefusalsData,
-            onComplete: () => {}
+            onComplete: () => {
+              setSelections(prev => ({...prev, refusals: true}));
+            }
           }),
           personWithDisability: () => navigation.navigate('PersonWithDisability', {
             data: personWithDisabilityData,
             setData: setPersonWithDisabilityData,
-            onComplete: () => {}
+            onComplete: () => {
+              setSelections(prev => ({...prev, personWithDisability: true}));
+            }
           }),
           signOfDanger: () => navigation.navigate('SignOfDanger', {
             data: signOfDangerData,
             setData: setSignOfDangerData,
-            onComplete: () => {}
+            onComplete: () => {
+              setSelections(prev => ({...prev, signOfDanger: true}));
+            }
           })
         };
         navigationMap[section]?.();
@@ -203,6 +209,8 @@ const Instructions = ({ route }: { route: any }) => {
           const yesSelected = selection === true;
           const noSelected = selection === false;
           
+          const isDisabledByAllClear = item.key !== 'allClear' && selections.allClear === true;
+          
           return (
             <View style={styles.container} key={item.key}>
               <View style={styles.imageContainer}>
@@ -215,10 +223,11 @@ const Instructions = ({ route }: { route: any }) => {
                   style={[
                     styles.yesButton,
                     item.key === "allClear"
-                      ? { backgroundColor: yesSelected ? '#a0dca0' :'#34C759'  }
-                      :{ backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
-                    noSelected && styles.disabledButton
+                      ? { backgroundColor: yesSelected ? '#a0dca0' :'#34C759' }
+                      : { backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
+                    (noSelected || isDisabledByAllClear) && styles.disabledButton
                   ]}
+                  // disabled={isDisabledByAllClear}
                 >
                   <Text style={styles.buttonText}>Yes</Text>
                 </TouchableOpacity>
@@ -227,9 +236,11 @@ const Instructions = ({ route }: { route: any }) => {
                   style={[
                     styles.noButton,
                     item.key === "allClear"
-                      ? { backgroundColor: noSelected ? '#FF1C1C' : '#fe8d8d' } 
-                      :{ backgroundColor: noSelected ? '#a0dca0': '#34C759' },
+                      ? { backgroundColor: noSelected ? '#FF1C1C' : '#fe8d8d' }
+                      : { backgroundColor: noSelected ? '#a0dca0': '#34C759' },
+                    isDisabledByAllClear && styles.disabledButton
                   ]}
+                  // disabled={isDisabledByAllClear}
                 >
                   <Text style={styles.buttonText}>No</Text>
                 </TouchableOpacity>
