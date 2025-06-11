@@ -30,11 +30,11 @@ cd ruoutwar-app
 
 2. Install the dependencies:
 ```bash
-npm install
-```
-or if you use yarn:
-```bash
 yarn install
+```
+or simply:
+```bash
+yarn
 ```
 
 3. Make sure font assets are properly linked:
@@ -47,7 +47,7 @@ npx react-native-asset
 ### Start the Development Server
 
 ```bash
-npm start
+yarn start
 ```
 or
 ```bash
@@ -101,8 +101,8 @@ ruoutwar-app/
 - **Metro Bundler Connection**: If your device can't connect to Metro Bundler, make sure your device and computer are on the same network.
 - **Web Build, CLI related issue**:  Reinstall expo cli
 ```bash
-npm uninstall -g expo-cli
-npm install -g @expo/cli
+yarn global remove expo-cli
+yarn global add @expo/cli
 ```
 
 
@@ -110,17 +110,17 @@ npm install -g @expo/cli
 
 For iOS:
 ```bash
-npm run ios
+yarn ios
 ```
 
 For Android:
 ```bash
-npm run android
+yarn android
 ```
 
 For web:
 ```bash
-npm run web
+yarn web
 ```
 
 ## Web Builds
