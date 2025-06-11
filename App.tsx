@@ -26,18 +26,15 @@ function AuthWrapper() {
   const router = useRouter();
 
   useEffect(() => {
+    console.log("AuthWrapper useEffect triggered", { authToken: authState.authToken, segments });
     const inAuthGroup = segments[0] === "(auth)";
-    
-    router.replace('/Login');
-    // if (!authState.authToken && !inAuthGroup) {
-    //   // Redirect to login if not authenticated
-    //   router.replace("/Login");
-    // } else if (authState.authToken && inAuthGroup) {
-    //   // Redirect to tabs if authenticated
-    //   // router.replace("/(tabs)");
-    //    router.replace("/Login");
-    // }
-
+    if (!authState.authToken && !inAuthGroup) {
+      console.log("Redirecting to /Login");
+      router.replace("/Login");
+    } else if (authState.authToken && inAuthGroup) {
+      console.log("Redirecting to /(tabs)");
+      router.replace("/(tabs)");
+    }
   }, [authState.authToken, segments]);
 
   return <Slot />;

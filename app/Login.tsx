@@ -52,13 +52,13 @@ const Login = () => {
           username: userName,
           password: password,
         });
-        console.log("Login response:", response.data.json());
+        console.log("Login response:", response.data);
         const token = response.data.token;
         const incidentTypes = response.data.incidentTypes;
         const incidentTypesId = incidentTypes.map((item: any) => ({
           id: item._id,
           title: item.incidentTypeSourceId,
-        }));
+        }));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 
         updateAuthState({
           authToken: token,
@@ -66,7 +66,7 @@ const Login = () => {
         });
         setLoading(false);
         // navigation.navigate("Tabs");
-        // router.replace("/(tabs)/Home");
+        router.push("/(tabs)/Home");
         
       } catch (error: any) {
         const msg = error.response?.data?.msg || "Login failed. Try again.";

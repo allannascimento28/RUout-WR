@@ -9,13 +9,9 @@ import {
   Alert,
 } from 'react-native';
 import ValidationModal from '../components/ValidationModal';
-import { useNavigation } from '@react-navigation/native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-
 import CustomHeader from '../components/CustomHeader';
 import CustomButton from '../components/CustomButton';
-import { RootStackNavigation } from '../navigation/types';
-
 import TickImage from '../assets/images/tick.png';
 import CrossImage from '../assets/images/cross.png';
 import WheelChairImage from '../assets/images/wheelchair.png';
@@ -25,6 +21,9 @@ import MediaImage from '../assets/images/media.png';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '../config';
+import { useLocalSearchParams, useRouter } from "expo-router";
+
+
 
 interface AudioRecording {
   uri: string;
@@ -34,8 +33,8 @@ interface AudioRecording {
 }
 
 const Instructions = ({ route }: { route: any }) => {
-  const navigation = useNavigation<RootStackNavigation>();
-  const incidentId = route.params?.incidentId;
+  const { incidentId } = useLocalSearchParams();
+  const router = useRouter();
   const { authState } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);

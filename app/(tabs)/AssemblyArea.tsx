@@ -45,11 +45,11 @@ const AssemblyArea = () => {
         setLoading(true);
 
         try {
-            console.log("incident Types :: ", authState);
+            console.log("incident Types from authState ::", authState.incidentTypes);
 
             const mappedData: ListItem[] = authState.incidentTypes.map((item: any, index: number) => ({
                 id: item.id,
-                title: item.title,
+                title: item.title || "No Title", // fallback title
                 image: imageList[index] || require('../../assets/images/tick.png'), // Fixed the path
             }));
             console.log("mappedData is :: ", mappedData);
@@ -57,8 +57,8 @@ const AssemblyArea = () => {
             
             if (mappedData.length === 0) {
                 // Call logout function instead of useLogout hook
-                // await logout();
-                // router.push('/Login');
+                await logout();
+                router.push('/Login');
             }
         } catch (error) {
             console.error("Error processing incident types:", error);
