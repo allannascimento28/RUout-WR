@@ -8,7 +8,7 @@ export default function RootLayout() {
         header: () => <Header />,
       }}
     >
-      <Stack.Screen name="login" options={{ headerShown: false }} />
+      <Stack.Screen name="Login" options={{ headerShown: false }} />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen 
         name="assembly-area" 

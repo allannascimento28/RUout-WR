@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View,Text, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-// import { NativeStackScreenProps } from '@react-navigation/native-stack';
-// import { TabNavigation } from '../../navigation/types';
-// import { RootStackParamList } from '../../navigation/types';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import CustomHeader from '../../components/CustomHeader';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useAuth, useLogout } from '../../context/AuthContext';
@@ -35,6 +32,7 @@ const imageList: any[] = [
 
 const AssemblyArea = () => {
     const { authState } = useAuth();
+    const logout = useLogout(); // Call the hook at the top level
     const [listData, setListData] = useState<ListItem[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -43,23 +41,24 @@ const AssemblyArea = () => {
         getIncidentTypesData();
     }, []);
 
-
     const getIncidentTypesData = async() => {
         setLoading(true);
+
         try {
-            console.log("incident Types :: ", authState.incidentTypes);
+            console.log("incident Types :: ", authState);
 
             const mappedData: ListItem[] = authState.incidentTypes.map((item: any, index: number) => ({
                 id: item.id,
                 title: item.title,
-                image: imageList[index] || require('../assets/images/tick.png'),
+                image: imageList[index] || require('../../assets/images/tick.png'), // Fixed the path
             }));
-            console.log("mappedData is :: ",mappedData);
+            console.log("mappedData is :: ", mappedData);
             setListData(mappedData);
+            
             if (mappedData.length === 0) {
-                useLogout();
-                // navigation.navigate('Login');
-                router.push('/Login');
+                // Call logout function instead of useLogout hook
+                // await logout();
+                // router.push('/Login');
             }
         } catch (error) {
             console.error("Error processing incident types:", error);
@@ -70,7 +69,6 @@ const AssemblyArea = () => {
 
     const handleListItemPress = (item: ListItem) => {
         console.log("Selected Item :: ", item);
-        // navigation.navigate('Instructions', { incidentId: item.id });
         router.push(`/Instructions?incidentId=${item.id}`);
     };
 

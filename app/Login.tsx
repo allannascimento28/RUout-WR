@@ -18,12 +18,11 @@ import axios from "axios";
 import BottomImage from "../assets/loginBottomImage.png";
 import { BASE_URL } from "../config";
 import { useAuth } from "../context/AuthContext";
-import { useNavigation } from "@react-navigation/native";
-import { RootStackNavigation } from "../navigation/types";
+import { useRouter } from "expo-router";
 
 const Login = () => {
+  const router = useRouter();
   const { width, height } = useWindowDimensions();
-  const navigation = useNavigation<RootStackNavigation>();
   const { authState, updateAuthState } = useAuth();
 
   const isLargeScreen = width > 768;
@@ -37,6 +36,9 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
+
+    console.log("Login button pressed");
+
     setLoading(true);
     const isUserNameEmpty = userName.trim() === "";
     const isPasswordEmpty = password.trim() === "";
@@ -50,7 +52,7 @@ const Login = () => {
           username: userName,
           password: password,
         });
-
+        console.log("Login response:", response.data.json());
         const token = response.data.token;
         const incidentTypes = response.data.incidentTypes;
         const incidentTypesId = incidentTypes.map((item: any) => ({
@@ -63,7 +65,9 @@ const Login = () => {
           incidentTypes: incidentTypesId,
         });
         setLoading(false);
-        navigation.navigate("Tabs");
+        // navigation.navigate("Tabs");
+        // router.replace("/(tabs)/Home");
+        
       } catch (error: any) {
         const msg = error.response?.data?.msg || "Login failed. Try again.";
         setAuthError(msg);
