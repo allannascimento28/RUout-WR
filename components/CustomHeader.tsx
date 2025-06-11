@@ -1,15 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 
 const CustomHeader = ({ title }: { title: string }) => {
-    const navigation = useNavigation();
+    const router = useRouter();
 
     return (
         <View style={styles.header}>
-            <TouchableOpacity style={{ paddingHorizontal: 5, paddingVertical: 3,borderWidth: 1, borderColor: "#E4E7EC", borderRadius: 3 }} onPress={() => navigation.goBack()}>
+            <TouchableOpacity style={{ paddingHorizontal: 5, paddingVertical: 3,borderWidth: 1, borderColor: "#E4E7EC", borderRadius: 3 }} 
+            onPress={() => router.back()}>
                 <FontAwesome5 name="chevron-left" size={18} color="black" />
             </TouchableOpacity>
             <Text style={styles.headerText}>{title}</Text>

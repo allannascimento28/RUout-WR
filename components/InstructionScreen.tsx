@@ -2,9 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ImageSourcePropType, Platform, StatusBar } from 'react-native';
 import CustomShareButton from './CustomShareButton';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../navigation/types';
+import { useRouter } from 'expo-router';
 
 interface InstructionScreenProps {
   gradientColors: string[];
@@ -21,8 +19,8 @@ const InstructionScreen: React.FC<InstructionScreenProps> = ({
   nextScreen,
   allowLineBreak = false
 }) => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
+  const router = useRouter();
   const formattedTitle = allowLineBreak ? title : title;
 
   return (
@@ -35,7 +33,8 @@ const InstructionScreen: React.FC<InstructionScreenProps> = ({
       {/* Top-left Cancel Button */}
       <TouchableOpacity 
         style={styles.cancelButton}
-        onPress={() => navigation.navigate('Tabs', { screen: 'Watch' })}
+        // onPress={() => navigation.navigate('Tabs', { screen: 'Watch' })}
+         onPress={() => router.push('/(tabs)/WatchScreen')} 
       >
         <Text style={styles.cancelButtonText}>Cancel</Text>
       </TouchableOpacity>
@@ -43,7 +42,7 @@ const InstructionScreen: React.FC<InstructionScreenProps> = ({
       {/* Top-right Next Button */}
       <TouchableOpacity 
         style={styles.nextButton}
-        onPress={() => navigation.navigate(nextScreen)}
+        onPress={() => router.push(`/${nextScreen}`)}
       >
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>

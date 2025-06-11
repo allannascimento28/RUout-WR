@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import CustomHeader from '../components/CustomHeader';
+import CustomHeader from '../../components/CustomHeader';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';

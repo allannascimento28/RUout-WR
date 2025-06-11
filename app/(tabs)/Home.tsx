@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { RootStackNavigation } from '../navigation/types';
-import { loadFonts } from '../assets/fonts/Fonts';
+
+
+import { loadFonts } from '../../assets/fonts/Fonts';
+import { useRouter } from 'expo-router';
 
 const Home = () => {
-  const navigation = useNavigation<RootStackNavigation>();
+  // const navigation = useNavigation<RootStackNavigation>();
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [activating, setActivating] = useState(false);
   const [navigatingToPreIncident, setNavigatingToPreIncident] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     async function loadResources() {
@@ -21,7 +23,8 @@ const Home = () => {
   const handleActivate = () => {
     setActivating(true);
     setTimeout(() => {
-      navigation.navigate('AssemblyArea');
+      // navigation.navigate('AssemblyArea');
+      router.push('/AssemblyArea');
       setActivating(false);
     }, 300);
   };
@@ -29,7 +32,8 @@ const Home = () => {
   const handlePreIncidentLinks = () => {
     setNavigatingToPreIncident(true);
     setTimeout(() => {
-      navigation.navigate('PreIncidentLinks');
+      // navigation.navigate('PreIncidentLinks');
+      router.push('/PreIncidentLinks');
       setNavigatingToPreIncident(false);
     }, 300);
   };

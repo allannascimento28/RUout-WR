@@ -9,11 +9,13 @@ import {
 } from 'react-native';
 import CustomHeader from '../components/CustomHeader';
 import Feather from '@expo/vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 import { RootStackNavigation } from '../navigation/types';
+import { useRouter } from 'expo-router';
 
 const PreIncidentLinks = () => {
-     const navigation = useNavigation<RootStackNavigation>();
+    //  const navigation = useNavigation<RootStackNavigation>();
+    const router = useRouter();
 
     return (
         <View style={styles.screen}>
@@ -25,7 +27,11 @@ const PreIncidentLinks = () => {
                     Click on the Chief Warden Instruction tab below. Download and save as bookmark. Share with all of your staff.
                 </Text>
 
-                <TouchableOpacity style={styles.downloadButton} onPress={() => navigation.navigate('InstructionLink')}>
+                <TouchableOpacity
+                 style={styles.downloadButton} 
+                //  onPress={() => navigation.navigate('InstructionLink')}
+                onPress={() => router.push('/InstructionLink')}
+                 >
                     <Feather name="download" size={18} color="#3392CC" style={styles.icon} />
                     <Text style={styles.buttonText}>Instruction Link</Text>
                 </TouchableOpacity>
@@ -37,7 +43,11 @@ const PreIncidentLinks = () => {
                 Click on the Response Handout link tab below. Download and save in your hand held device. Share with all of your staff
                 </Text>
 
-                <TouchableOpacity style={styles.downloadButton} onPress={() => navigation.navigate('ResponseHandout')}>
+                <TouchableOpacity 
+                style={styles.downloadButton} 
+                // onPress={() => navigation.navigate('ResponseHandout')}
+                onPress={() => router.push('/ResponseHandout')}
+                >
                     <Feather name="download" size={18} color="#3392CC" style={styles.icon} />
                     <Text style={styles.buttonText}>Response Handouts</Text>
                 </TouchableOpacity>
@@ -49,7 +59,11 @@ const PreIncidentLinks = () => {
                 Click on the Video Tutorial tab below. Watch, download, and share with your staff
                  </Text>
 
-                <TouchableOpacity style={styles.downloadButton} onPress={() => navigation.navigate('ResponseVideos')}>
+                <TouchableOpacity 
+                style={styles.downloadButton} 
+                // onPress={() => navigation.navigate('ResponseVideos')}
+                onPress={() => router.push('/ResponseVideos')}
+                >
                     <Feather name="download" size={18} color="#3392CC" style={styles.icon} />
                     <Text style={styles.buttonText}>Response Videos</Text>
                 </TouchableOpacity>

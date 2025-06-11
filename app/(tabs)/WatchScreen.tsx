@@ -1,16 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { RootStackNavigation } from '../navigation/types';
+import { useRouter } from 'expo-router';
 
 const WatchScreen = () => {
-  const navigation = useNavigation<RootStackNavigation>();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
       <TouchableOpacity 
         style={styles.button}
-        onPress={() => navigation.navigate('ManualInstruction')}
+        onPress={() => router.push('/ManualInstruction')}
       >
         <Text style={styles.buttonText}>Watch</Text>
       </TouchableOpacity>

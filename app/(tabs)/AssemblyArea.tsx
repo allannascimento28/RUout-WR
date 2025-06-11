@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View,Text, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { TabNavigation } from '../navigation/types';
-import { RootStackParamList } from '../navigation/types';
-import CustomHeader from '../components/CustomHeader';
+// import { NativeStackScreenProps } from '@react-navigation/native-stack';
+// import { TabNavigation } from '../../navigation/types';
+// import { RootStackParamList } from '../../navigation/types';
+import CustomHeader from '../../components/CustomHeader';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { useAuth, useLogout } from '../context/AuthContext';
+import { useAuth, useLogout } from '../../context/AuthContext';
+import { useRouter } from 'expo-router';
 
 type Props = {
-  navigation: TabNavigation;
-  route: NativeStackScreenProps<RootStackParamList, 'IndicateTypes'>['route'];
+//   navigation: TabNavigation;
+//   route: NativeStackScreenProps<RootStackParamList, 'IndicateTypes'>['route'];
 };
 
 type ListItem = {
@@ -19,23 +20,24 @@ type ListItem = {
 };
 
 const imageList: any[] = [
-    require('../assets/images/fireandsmoke.png'),
-    require('../assets/images/bombThreat.png'),
-    require('../assets/images/smellOfGas.png'),
-    require('../assets/images/structuralDamage.png'),
-    require('../assets/images/workplace.png'),
-    require('../assets/images/stormDamage.png'),
-    require('../assets/images/medical.png'),
-    require('../assets/images/chemicalLeak.png'),
-    require('../assets/images/externalEmergancy.png'),
-    require('../assets/images/utilitiesOutrage.png'),
-    require('../assets/images/exercise.png'),
+    require('../../assets/images/fireandsmoke.png'),
+    require('../../assets/images/bombThreat.png'),
+    require('../../assets/images/smellOfGas.png'),
+    require('../../assets/images/structuralDamage.png'),
+    require('../../assets/images/workplace.png'),
+    require('../../assets/images/stormDamage.png'),
+    require('../../assets/images/medical.png'),
+    require('../../assets/images/chemicalLeak.png'),
+    require('../../assets/images/externalEmergancy.png'),
+    require('../../assets/images/utilitiesOutrage.png'),
+    require('../../assets/images/exercise.png'),
 ];
 
-const IndicateTypes = ({ navigation }: {navigation : any}) => {
+const AssemblyArea = () => {
     const { authState } = useAuth();
     const [listData, setListData] = useState<ListItem[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
     
     useEffect(() => {
         getIncidentTypesData();
@@ -56,7 +58,8 @@ const IndicateTypes = ({ navigation }: {navigation : any}) => {
             setListData(mappedData);
             if (mappedData.length === 0) {
                 useLogout();
-                navigation.navigate('Login');
+                // navigation.navigate('Login');
+                router.push('/Login');
             }
         } catch (error) {
             console.error("Error processing incident types:", error);
@@ -67,7 +70,8 @@ const IndicateTypes = ({ navigation }: {navigation : any}) => {
 
     const handleListItemPress = (item: ListItem) => {
         console.log("Selected Item :: ", item);
-        navigation.navigate('Instructions', { incidentId: item.id });
+        // navigation.navigate('Instructions', { incidentId: item.id });
+        router.push(`/Instructions?incidentId=${item.id}`);
     };
 
     const renderItem = ({ item }: { item: ListItem }) => (
@@ -106,7 +110,7 @@ const IndicateTypes = ({ navigation }: {navigation : any}) => {
     );
 };
 
-export default IndicateTypes;
+export default AssemblyArea;
 
 const styles = StyleSheet.create({
     screen: {
