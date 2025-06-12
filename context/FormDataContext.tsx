@@ -45,6 +45,7 @@ interface FormDataContextProps {
   setAudioRecordings: (data: AudioRecording[]) => void;
   images: ImageFile[];
   setImages: (data: ImageFile[]) => void;
+  clearData: () => void;
 }
 
 const FormDataContext = createContext<FormDataContextProps | undefined>(undefined);
@@ -59,6 +60,17 @@ export const FormDataProvider = ({ children }: { children: ReactNode }) => {
   const [additionalDetails, setAdditionalDetails] = useState<AdditionalDetails>({ notes: '' });
   const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
   const [images, setImages] = useState<ImageFile[]>([]);
+
+  const clearData = () => {
+    setRefusalsData({ noOfRefusals: '', location: '' });
+    setPersonWithDisabilityData({ noOfPersonWithDisability: '', descriptionAndLocation: '' });
+    setSignOfDangerData({ signOfDanger: '' });
+    setAdditionalDetails({ notes: '' });
+    setAudioRecordings([]);
+    setImages([]);
+  };
+
+  
   return (
     <FormDataContext.Provider
       value={{
@@ -74,6 +86,7 @@ export const FormDataProvider = ({ children }: { children: ReactNode }) => {
         setAudioRecordings,
         images,
         setImages,
+        clearData,
       }}
     >
       {children}

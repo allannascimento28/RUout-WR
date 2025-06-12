@@ -59,6 +59,7 @@ const Instructions = () => {
     setAudioRecordings,
     images,
     setImages,
+    clearData,
   } = useFormData();
 
   // const [refusalsData, setRefusalsData] = useState({ noOfRefusals: '', location: '' });
@@ -186,6 +187,7 @@ const Instructions = () => {
       
         console.log("\n\n\n\n Response of the appppiiii  : ", response.data)
         setIsModalVisible(true);
+        clearData();
       } else {
         Alert.alert('Error', `Server responded with status ${response.status}`);
       }
