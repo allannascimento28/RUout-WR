@@ -22,6 +22,7 @@ import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '../config';
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFormData } from '../context/FormDataContext';
 
 
 
@@ -32,7 +33,7 @@ interface AudioRecording {
   duration: number;
 }
 
-const Instructions = ({ route }: { route: any }) => {
+const Instructions = () => {
   const { incidentId } = useLocalSearchParams();
   const router = useRouter();
   const { authState } = useAuth();
@@ -45,12 +46,26 @@ const Instructions = ({ route }: { route: any }) => {
     personWithDisability: null,
     signOfDanger: null,
   });
+  const {
+    refusalsData,
+    setRefusalsData,
+    personWithDisabilityData,
+    setPersonWithDisabilityData,
+    signOfDangerData,
+    setSignOfDangerData,
+    additionalDetails,
+    setAdditionalDetails,
+    audioRecordings,
+    setAudioRecordings,
+    images,
+    setImages,
+  } = useFormData();
 
-  const [refusalsData, setRefusalsData] = useState({ noOfRefusals: '', location: '' });
-  const [personWithDisabilityData, setPersonWithDisabilityData] = useState({noOfPersonWithDisability: '', descriptionAndLocation: ''});
-  const [signOfDangerData, setSignOfDangerData] = useState({signOfDanger: ''});
-  const [additionalDetails, setAdditionalDetails] = useState({notes: ''});
-  const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
+  // const [refusalsData, setRefusalsData] = useState({ noOfRefusals: '', location: '' });
+  // const [personWithDisabilityData, setPersonWithDisabilityData] = useState({noOfPersonWithDisability: '', descriptionAndLocation: ''});
+  // const [signOfDangerData, setSignOfDangerData] = useState({signOfDanger: ''});
+  // const [additionalDetails, setAdditionalDetails] = useState({notes: ''});
+  // const [audioRecordings, setAudioRecordings] = useState<AudioRecording[]>([]);
 
   const canSubmit = selections.allClear === true || 
     (selections.refusals !== null && selections.personWithDisability !== null && selections.signOfDanger !== null);
@@ -72,21 +87,25 @@ const Instructions = ({ route }: { route: any }) => {
 
       if (value && section !== 'allClear') {
         const navigationMap = {
-          refusals: () => navigation.navigate('Refusals', {
-            data: refusalsData,
-            setData: setRefusalsData,
-            onComplete: () => {}
-          }),
-          personWithDisability: () => navigation.navigate('PersonWithDisability', {
-            data: personWithDisabilityData,
-            setData: setPersonWithDisabilityData,
-            onComplete: () => {}
-          }),
-          signOfDanger: () => router.push('SignOfDanger', {
-            data: signOfDangerData,
-            setData: setSignOfDangerData,
-            onComplete: () => {}
-          })
+          // refusals: () => navigation.navigate('Refusals', {
+          //   data: refusalsData,
+          //   setData: setRefusalsData,
+          //   onComplete: () => {}
+          // }),
+          refusals: () => router.push('Refusals'),
+
+          // personWithDisability: () => navigation.navigate('PersonWithDisability', {
+          //   data: personWithDisabilityData,
+          //   setData: setPersonWithDisabilityData,
+          //   onComplete: () => {}
+          // }),
+          personWithDisability: () => router.push('PersonWithDisability'),
+          // signOfDanger: () => router.push('SignOfDanger', {
+          //   data: signOfDangerData,
+          //   setData: setSignOfDangerData,
+          //   onComplete: () => {}
+          // })
+          signOfDanger: () => router.push('SignOfDanger'),
         };
         navigationMap[section]?.();
       }
@@ -95,7 +114,9 @@ const Instructions = ({ route }: { route: any }) => {
 
   const handleSubmit = async () => {
     // console.log("Audio Recordings:", audioRecordings)
-    console.log("sign of dangerrrrr : ", signOfDangerData)
+    // console.log("sign of dangerrrrr : ", signOfDangerData)
+    console.log("Imagea arege :: ", images)
+    
     setIsSubmitting(true);
     const token = authState.authToken;
     const formData = new FormData();
@@ -144,6 +165,16 @@ const Instructions = ({ route }: { route: any }) => {
     }
 
     try {
+      for (const image of images) {
+        const response = await fetch(image.uri);
+        const blob = await response.blob();
+        formData.append('media[image][]', blob, image.uri.split('/').pop());
+      }
+    } catch (error) {
+      console.error('Error processing images:', error);
+    }
+
+    try {
       const response = await axios.put(`${BASE_URL}/user/incident-type/${incidentId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -152,6 +183,8 @@ const Instructions = ({ route }: { route: any }) => {
       });
 
       if (response.status === 200) {
+      
+        console.log("\n\n\n\n Response of the appppiiii  : ", response.data)
         setIsModalVisible(true);
       } else {
         Alert.alert('Error', `Server responded with status ${response.status}`);
@@ -175,21 +208,18 @@ const Instructions = ({ route }: { route: any }) => {
     {
       title: 'Additional Details and Requests',
       image: EditImage,
-      onPress: () => navigation.navigate('AdditionalDetails', {
-        data: additionalDetails,
-        setData: setAdditionalDetails,
-        onComplete: () => {}
-      })
+      onPress: () => router.push('AdditionalDetails')
     },
     {
       title: 'Media Files',
       image: MediaImage,
-      onPress: () => navigation.navigate('MediaFiles', {
-        data: { audioRecordings },
-        setData: setAudioRecordings,
-        onComplete: () => {},
-        incidentId: incidentId
-      })
+      // onPress: () => navigation.navigate('MediaFiles', {
+      //   data: { audioRecordings },
+      //   setData: setAudioRecordings,
+      //   onComplete: () => {},
+      //   incidentId: incidentId
+      // })
+      onPress: () => router.push('MediaFiles')
     },
   ];
 

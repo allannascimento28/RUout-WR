@@ -9,8 +9,9 @@ import {
 } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import CustomButton from './CustomButton';
-import { useNavigation } from '@react-navigation/native';
-import { RootStackNavigation } from '../navigation/types';
+import { useRouter } from 'expo-router';
+// import { useNavigation } from '@react-navigation/native';
+// import { RootStackNavigation } from '../navigation/types';
 
 interface ValidationModalProps {
     visible: boolean;
@@ -19,8 +20,10 @@ interface ValidationModalProps {
 }
 
 const ValidationModal: React.FC<ValidationModalProps> = ({ visible, onClose, onDownload }) => {
-    const navigation = useNavigation<RootStackNavigation>();
+    // const navigation = useNavigation<RootStackNavigation>();
+    const router = useRouter();
     const [tickPosition] = useState(new Animated.Value(0));
+
 
     useEffect(() => {
         if (visible) {
@@ -31,13 +34,14 @@ const ValidationModal: React.FC<ValidationModalProps> = ({ visible, onClose, onD
             }).start();
 
             const timer = setTimeout(() => {
-                navigation.navigate('Tabs', { screen: 'AssemblyArea' });
+                // navigation.navigate('Tabs', { screen: 'AssemblyArea' });\
+                router.push('/(tabs)/AssemblyArea');
                 onClose();
             }, 3000);
 
             return () => clearTimeout(timer);
         }
-    }, [visible, navigation, onClose]);
+    }, [visible, router, onClose]);
 
     return (
         <Modal

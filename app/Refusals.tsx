@@ -12,12 +12,19 @@ import {
 import CustomHeader from '../components/CustomHeader';
 import CustomInput from '../components/CustomInput';
 import CustomButton from '../components/CustomButton';
+import { useFormData } from '../context/FormDataContext';
+import { useRouter } from 'expo-router';
 
-const Refusals = ({ route, navigation }) => {
-  const {data, setData, onComplete } = route.params;
 
-  const [noOfRefusals, setNoOfRefusals] = useState(data.noOfRefusals || '');
-  const [location, setLocation] = useState(data.location || '');
+const Refusals = () => {
+  // const {data, setData, onComplete } = route.params;
+
+  const {refusalsData, setRefusalsData} = useFormData();
+  const router = useRouter();
+
+
+  const [noOfRefusals, setNoOfRefusals] = useState(refusalsData.noOfRefusals || '');
+  const [location, setLocation] = useState(refusalsData.location || '');
   const [noOfRefusalsError, setNoOfRefusalsError] = useState('');
   const [locationError, setLocationError] = useState('');
 
@@ -36,9 +43,11 @@ const Refusals = ({ route, navigation }) => {
 
   const handleSave = () => {
     if (!validate()) return;
-    setData({ noOfRefusals, location });
-    onComplete?.();
-    navigation.goBack();
+    // setData({ noOfRefusals, location });
+    // onComplete?.();
+    // navigation.goBack();
+    setRefusalsData({ noOfRefusals, location });
+    router.back();
   };
 
   return (

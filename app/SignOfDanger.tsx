@@ -6,16 +6,19 @@ import CustomButton from "../components/CustomButton";
 import axios from "axios";
 import { BASE_URL } from "../config";
 import { useNavigation } from "@react-navigation/native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFormData } from "../context/FormDataContext";
 
 
 const SignOfDanger = () => {
-  const {data, setData, onComplete} = useLocalSearchParams();
+  // const {data, setData, onComplete} = useLocalSearchParams();
   // const navigation = useNavigation();
   // const {data, setData, onComplete } = route.params;
+  const router = useRouter();
+  const {signOfDangerData, setSignOfDangerData} = useFormData();
 
 
-  const [signOfDanger, setSignOfDanger] = useState<string>('');
+  const [signOfDanger, setSignOfDanger] = useState<string>( signOfDangerData.signOfDanger || '');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleSignOfDanger = (text: string) => {
@@ -29,8 +32,9 @@ const SignOfDanger = () => {
       return;
     }
 
-    setData({ signOfDanger });
-    onComplete?.();
+    // setData({ signOfDanger });
+    // onComplete?.();
+    setSignOfDangerData({ signOfDanger });
     router.back();
     console.log("handle save: ", signOfDanger);
   }

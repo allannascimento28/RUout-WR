@@ -3,11 +3,14 @@ import { View, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from "re
 import CustomHeader from "../components/CustomHeader";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
+import { useFormData } from "../context/FormDataContext";
+import { useRouter } from "expo-router";
 
-const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any }) => {
-  const {data, setData, onComplete } = route.params;
+const AdditionalDetails = () => {
+  const router = useRouter();
+  const {additionalDetails, setAdditionalDetails} = useFormData();
  
-  const [notes, setNotes] = useState<string>('');
+  const [notes, setNotes] = useState<string>(additionalDetails.notes || '');
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const handleNotes = (text: string) => {
@@ -21,9 +24,8 @@ const AdditionalDetails = ({ navigation, route }: { navigation: any, route: any 
       setErrorMessage('Please enter notes');
       return;
     }
-    setData({ notes });
-    onComplete?.();
-    navigation.goBack();
+    setAdditionalDetails({ notes });
+    router.back();
     console.log("handle save: ", notes);
   }
 

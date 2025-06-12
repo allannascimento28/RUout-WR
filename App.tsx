@@ -31,7 +31,6 @@ function AuthWrapper() {
     if (!authState.authToken && !inAuthGroup) {
       router.replace("/(tabs)");
     } else if (authState.authToken && inAuthGroup) {
-    
       router.replace("/Login");
     }
   }, [authState.authToken, segments]);

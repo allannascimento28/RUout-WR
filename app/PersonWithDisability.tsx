@@ -10,12 +10,16 @@ import {
 import CustomHeader from "../components/CustomHeader";
 import CustomInput from "../components/CustomInput";
 import CustomButton from "../components/CustomButton";
+import { useFormData } from "../context/FormDataContext";
+import { useRouter } from "expo-router";
 
-const PersonWithDisability = ({ navigation, route }: { navigation: any, route: any }) => {
-  const {data, setData, onComplete } = route.params;
+const PersonWithDisability = () => {
+  // const {data, setData, onComplete } = route.params;
+  const router = useRouter();
+  const {personWithDisabilityData, setPersonWithDisabilityData} = useFormData();
 
-  const [noOfPersonWithDisability, setNoOfPersonWithDisability] = useState('');
-  const [descriptionAndLocation, setDescriptionAndLocation] = useState('');
+  const [noOfPersonWithDisability, setNoOfPersonWithDisability] = useState(personWithDisabilityData.noOfPersonWithDisability ||'');
+  const [descriptionAndLocation, setDescriptionAndLocation] = useState(personWithDisabilityData.descriptionAndLocation || '');
   const [noOfPersonError, setNoOfPersonError] = useState('');
   const [descriptionError, setDescriptionError] = useState('');
 
@@ -55,9 +59,8 @@ const PersonWithDisability = ({ navigation, route }: { navigation: any, route: a
   const handleSave = () => {
     if (!handleValidate()) return;
 
-      setData({ noOfPersonWithDisability, descriptionAndLocation });
-      onComplete?.();
-      navigation.goBack();
+      setPersonWithDisabilityData({ noOfPersonWithDisability, descriptionAndLocation });
+      router.back();
       console.log("No. of Person with Disability:", parseInt(noOfPersonWithDisability, 10));
       console.log("Description and Location:", descriptionAndLocation);
       Keyboard.dismiss(); 

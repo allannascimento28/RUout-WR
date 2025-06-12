@@ -17,6 +17,8 @@ import ImageUploader from '../components/ImageUploader';
 import CustomHeader from '../components/CustomHeader';
 import axios from 'axios';
 import { BASE_URL } from '../config';
+import { useRouter } from 'expo-router';
+import { useFormData } from '../context/FormDataContext';
 
 interface AudioRecording {
   uri: string;
@@ -37,23 +39,25 @@ interface MediaFilesProps {
 }
 
 const MediaFiles: React.FC<MediaFilesProps> = ({ route }) => {
-  const { setData, onComplete, data } = route.params;
-  const navigation = useNavigation();
+  // const { setData, onComplete, data } = route.params;
+  // const navigation = useNavigation();
+  const router = useRouter();
+  const {audioRecordings, setAudioRecordings} = useFormData();
   const [showRecorder, setShowRecorder] = useState(false);
   const [playingSound, setPlayingSound] = useState<Audio.Sound | null>(null);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   
   // Local state to manage recordings for immediate UI updates
   const [localRecordings, setLocalRecordings] = useState<AudioRecording[]>(
-    data?.audioRecordings || []
+    audioRecordings || []
   );
 
   // Update local state when data prop changes
   useEffect(() => {
-    if (data?.audioRecordings) {
-      setLocalRecordings(data.audioRecordings);
+    if (audioRecordings) {
+      setLocalRecordings(audioRecordings);
     }
-  }, [data?.audioRecordings]);
+  }, [audioRecordings]);
 
   useEffect(() => {
     return () => {
@@ -83,10 +87,10 @@ const MediaFiles: React.FC<MediaFilesProps> = ({ route }) => {
       setLocalRecordings(updatedRecordings);
       
       // Update parent state with the complete updated array
-      setData({ audioRecordings: updatedRecordings });
-      
+      // setData({ audioRecordings: updatedRecordings });
+      setAudioRecordings(updatedRecordings);
       // Call completion callback
-      onComplete?.();
+      // onComplete?.();
 
       console.log("New recording saved:", newRecording);
       console.log("Total recordings:", updatedRecordings.length);
@@ -111,8 +115,9 @@ const MediaFiles: React.FC<MediaFilesProps> = ({ route }) => {
             try {
               const updatedRecordings = localRecordings.filter((_, i) => i !== index);
               setLocalRecordings(updatedRecordings);
-              setData({ audioRecordings: updatedRecordings });
-              onComplete?.();
+              // setData({ audioRecordings: updatedRecordings });
+              // onComplete?.();
+              setAudioRecordings(updatedRecordings);
             } catch (error) {
               console.error("Error deleting recording:", error);
               Alert.alert('Error', 'Failed to delete recording');
@@ -171,11 +176,6 @@ const MediaFiles: React.FC<MediaFilesProps> = ({ route }) => {
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
-
-  // Debug logging
-  console.log("Current localRecordings:", localRecordings);
-  console.log("Current data.audioRecordings:", data?.audioRecordings);
-  console.log("Recordings length:", localRecordings?.length);
 
   return (
     <SafeAreaView style={styles.container}>
