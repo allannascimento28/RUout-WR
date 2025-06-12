@@ -9,9 +9,13 @@ import {
   Alert,
 } from 'react-native';
 import ValidationModal from '../components/ValidationModal';
+import { useNavigation } from '@react-navigation/native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+
 import CustomHeader from '../components/CustomHeader';
 import CustomButton from '../components/CustomButton';
+import { RootStackNavigation } from '../navigation/types';
+
 import TickImage from '../assets/images/tick.png';
 import CrossImage from '../assets/images/cross.png';
 import WheelChairImage from '../assets/images/wheelchair.png';
@@ -21,9 +25,7 @@ import MediaImage from '../assets/images/media.png';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '../config';
-import { useLocalSearchParams, useRouter } from "expo-router";
-
-
+import { useRouter } from 'expo-router';
 
 interface AudioRecording {
   uri: string;
@@ -33,8 +35,9 @@ interface AudioRecording {
 }
 
 const Instructions = ({ route }: { route: any }) => {
-  const { incidentId } = useLocalSearchParams();
   const router = useRouter();
+  const navigation = useNavigation<RootStackNavigation>();
+  const incidentId = route.params?.incidentId;
   const { authState } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -82,7 +85,7 @@ const Instructions = ({ route }: { route: any }) => {
             setData: setPersonWithDisabilityData,
             onComplete: () => {}
           }),
-          signOfDanger: () => router.push('SignOfDanger', {
+          signOfDanger: () => router('SignOfDanger', {
             data: signOfDangerData,
             setData: setSignOfDangerData,
             onComplete: () => {}
@@ -94,8 +97,7 @@ const Instructions = ({ route }: { route: any }) => {
   };
 
   const handleSubmit = async () => {
-    // console.log("Audio Recordings:", audioRecordings)
-    console.log("sign of dangerrrrr : ", signOfDangerData)
+    console.log("Audio Recordings:", audioRecordings)
     setIsSubmitting(true);
     const token = authState.authToken;
     const formData = new FormData();
@@ -214,7 +216,9 @@ const Instructions = ({ route }: { route: any }) => {
                   onPress={() => handleButtonPress(item.key, true)}
                   style={[
                     styles.yesButton,
-                    { backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
+                    item.key === "allClear"
+                      ? { backgroundColor: yesSelected ? '#a0dca0' :'#34C759'  }
+                      :{ backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
                     noSelected && styles.disabledButton
                   ]}
                 >
@@ -224,7 +228,9 @@ const Instructions = ({ route }: { route: any }) => {
                   onPress={() => handleButtonPress(item.key, false)}
                   style={[
                     styles.noButton,
-                    noSelected && styles.activeNoButton
+                    item.key === "allClear"
+                      ? { backgroundColor: noSelected ? '#FF1C1C' : '#fe8d8d' } 
+                      :{ backgroundColor: noSelected ? '#a0dca0': '#34C759' },
                   ]}
                 >
                   <Text style={styles.buttonText}>No</Text>
@@ -254,7 +260,7 @@ const Instructions = ({ route }: { route: any }) => {
           <CustomButton 
             title="SUBMIT"
             onPress={handleSubmit} 
-            // disabled={isSubmitting || !canSubmit}
+            disabled={isSubmitting || !canSubmit}
             loading={isSubmitting}
           />
         </View>

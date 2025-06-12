@@ -37,22 +37,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Load auth state from AsyncStorage on app start
   useEffect(() => {
-    console.log("Context loading...");
     const loadAuthState = async () => {
       try {
         const [authToken, incidentTypes] = await Promise.all([
           AsyncStorage.getItem("authToken"),
           AsyncStorage.getItem("incidentTypes"),
         ]);
-        
-        console.log("Loaded from AsyncStorage:", { authToken, incidentTypes });
-        
+      
         if (authToken || incidentTypes) {
           const newState: AuthState = {
             authToken: authToken || null,
             incidentTypes: incidentTypes ? JSON.parse(incidentTypes) : [],
           };
-          console.log("Setting loaded auth state:", newState);
           setAuthState(newState);
         }
       } catch (error) {
@@ -69,8 +65,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   // Persist auth state to AsyncStorage whenever it changes
   useEffect(() => {
     if (!isInitialized) return;
-    
-    console.log("Persisting auth state:", authState);
     const persistAuthState = async () => {
       try {
         if (authState.authToken) {
@@ -87,7 +81,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
           await AsyncStorage.removeItem("incidentTypes");
         }
-        console.log("Auth state persisted successfully");
+      
       } catch (error) {
         console.error("Failed to persist auth state", error);
       }

@@ -29,11 +29,10 @@ function AuthWrapper() {
     console.log("AuthWrapper useEffect triggered", { authToken: authState.authToken, segments });
     const inAuthGroup = segments[0] === "(auth)";
     if (!authState.authToken && !inAuthGroup) {
-      console.log("Redirecting to /Login");
-      router.replace("/Login");
-    } else if (authState.authToken && inAuthGroup) {
-      console.log("Redirecting to /(tabs)");
       router.replace("/(tabs)");
+    } else if (authState.authToken && inAuthGroup) {
+    
+      router.replace("/Login");
     }
   }, [authState.authToken, segments]);
 

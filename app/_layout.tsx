@@ -1,8 +1,23 @@
 import { Stack } from "expo-router";
 import Header from "../components/Header";
-import { AuthProvider } from "../context/AuthContext";
+import { AuthProvider, useAuth } from "../context/AuthContext";
+import { ActivityIndicator, View, StyleSheet } from "react-native";
+
+function LoadingScreen() {
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#3392CC" />
+    </View>
+  );
+}
 
 export default function RootLayout() {
+  const { isLoading } = useAuth();
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <AuthProvider>
       <Stack
@@ -128,3 +143,11 @@ export default function RootLayout() {
     </AuthProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

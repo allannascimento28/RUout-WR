@@ -14,7 +14,7 @@ const Home = () => {
 
   useEffect(() => {
     async function loadResources() {
-      await loadFonts();
+      // await loadFonts();
       setFontsLoaded(true);
     }
     loadResources();

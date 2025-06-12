@@ -6,11 +6,14 @@ import CustomButton from "../components/CustomButton";
 import axios from "axios";
 import { BASE_URL } from "../config";
 import { useNavigation } from "@react-navigation/native";
+import { useLocalSearchParams } from "expo-router";
 
 
-const SignOfDanger = ({ route }: { route: any }) => {
-  const navigation = useNavigation();
-  const {data, setData, onComplete } = route.params;
+const SignOfDanger = () => {
+  const {data, setData, onComplete} = useLocalSearchParams();
+  // const navigation = useNavigation();
+  // const {data, setData, onComplete } = route.params;
+
 
   const [signOfDanger, setSignOfDanger] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -28,7 +31,7 @@ const SignOfDanger = ({ route }: { route: any }) => {
 
     setData({ signOfDanger });
     onComplete?.();
-    navigation.goBack();
+    router.back();
     console.log("handle save: ", signOfDanger);
   }
 
