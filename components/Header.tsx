@@ -1,18 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Header = () => {
   
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea]}>
       <View style={styles.header}>
         {/* Center Text */}
         <Text style={styles.headerText}>Save Time, Save Life</Text>
 
         {/* Bottom-left Logo with responsive sizing */}
         <Image 
-          source={require('../assets/LOGO.png')} 
+          source={require('../assets/images/LOGO.png')} 
           style={[
             styles.logo
           ]} 
@@ -27,17 +27,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   header: {
-    flexDirection: 'row',
+    height: 70,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
     position: 'relative',
+    elevation: 3,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10  },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 4, 
-    height: 70,
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   headerText: {
     color: '#3392CC',

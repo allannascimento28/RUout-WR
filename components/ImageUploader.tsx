@@ -16,6 +16,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import { BASE_URL } from '../config';
+import { useFormData } from '../context/FormDataContext';
 
 const { width: screenWidth } = Dimensions.get('window');
 const boxSize = 95;
@@ -31,7 +32,7 @@ interface ImageData {
 
 const ImageUploader: React.FC = () => {
 
-  const [images, setImages] = useState<ImageData[]>([]);
+  const {images, setImages} = useFormData();
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const [showUploadOptions, setShowUploadOptions] = useState(false);
 
