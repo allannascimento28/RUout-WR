@@ -8,7 +8,7 @@ export const IncidentTypeSource = [
     { "id": "683c38cd2146feaffd2c6d61", "title": "Smell of Gas" }, 
     { "id": "683c38cd2146feaffd2c6d69", "title": "Exercise Only" }, 
     { "id": "683c38cd2146feaffd2c6d68", "title": "Utilities Outrage" }, 
-    { "id": "683c38cd2146feaffd2c6d6a", "title": "Test" }, 
     { "id": "683c38cd2146feaffd2c6d66", "title": "Chemical Leak" }, 
-    { "id": "683c38cd2146feaffd2c6d67", "title": "External Emergency" }
+    { "id": "683c38cd2146feaffd2c6d67", "title": "External Emergency" },
+    { "id": "683c38cd2146feaffd2c6d6a", "title": "Test" }, 
 ]
