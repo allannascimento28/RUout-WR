@@ -23,7 +23,7 @@ const Home = () => {
     setActivating(true);
     setTimeout(() => {
       // navigation.navigate('AssemblyArea');
-      router.push('/assembly-area');
+      router.push('/(tabs)/assembly-area');
       setActivating(false);
     }, 300);
   };
@@ -31,8 +31,7 @@ const Home = () => {
   const handlePreIncidentLinks = () => {
     setNavigatingToPreIncident(true);
     setTimeout(() => {
-      // navigation.navigate('PreIncidentLinks');
-      router.push('/pre-incident-links');
+      router.push('/(tabs)/instruction-link');
       setNavigatingToPreIncident(false);
     }, 300);
   };

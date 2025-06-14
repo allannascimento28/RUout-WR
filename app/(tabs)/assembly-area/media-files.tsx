@@ -12,13 +12,13 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
-import AudioRecorder from '../components/AudioRecorder';
-import ImageUploader from '../components/ImageUploader';
-import CustomHeader from '../components/CustomHeader';
+import AudioRecorder from '../../../components/AudioRecorder';
+import ImageUploader from '../../../components/ImageUploader';
+import CustomHeader from '../../../components/CustomHeader';
 import axios from 'axios';
-import { BASE_URL } from '../config';
+import { BASE_URL } from '../../../config';
 import { useRouter } from 'expo-router';
-import { useFormData } from '../context/FormDataContext';
+import { useFormData } from '../../../context/FormDataContext';
 
 interface AudioRecording {
   uri: string;

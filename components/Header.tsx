@@ -8,7 +8,7 @@ const Header = () => {
     <SafeAreaView style={[styles.safeArea]}>
       <View style={styles.header}>
         {/* Center Text */}
-        <Text style={styles.headerText}>Save Time, Save Life</Text>
+        <Text style={styles.headerText}>Save Time, Save Lives</Text>
 
         {/* Bottom-left Logo with responsive sizing */}
         <Image 

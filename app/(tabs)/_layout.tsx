@@ -22,7 +22,9 @@ export default function TabLayout() {
             // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
-          default: {},
+          default: {
+            // paddingBottom: 10,
+          },
         }),
       }}>
       <Tabs.Screen
@@ -37,6 +39,7 @@ export default function TabLayout() {
         name="assembly-area"
         options={{
           title: "Assembly Area",
+          href: "/assembly-area",
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialIcons
               name="stacked-line-chart"
@@ -51,6 +54,7 @@ export default function TabLayout() {
         name="instruction-link"
         options={{
           title: "Links",
+          href: "/instruction-link",
           tabBarIcon: ({ focused, size, color }) => (
             <Fontisto name="link" size={size} color={color} />
           ),
@@ -60,6 +64,7 @@ export default function TabLayout() {
         name="watch-screen"
         options={{
           title: "Watch",
+          href: "/watch-screen",
           tabBarIcon: ({ focused, size, color }) => (
             <MaterialIcons name="volume-up" size={size} color={color} />
           ),

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, KeyboardAvoidingView, Platform, Alert, ScrollView } from "react-native";
-import CustomHeader from "../components/CustomHeader";
-import CustomInput from "../components/CustomInput";
-import CustomButton from "../components/CustomButton";
+import CustomHeader from "../../../components/CustomHeader";
+import CustomInput from "../../../components/CustomInput";
+import CustomButton from "../../../components/CustomButton";
 import axios from "axios";
-import { BASE_URL } from "../config";
+import { BASE_URL } from "../../../config";
 import { useNavigation } from "@react-navigation/native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useFormData } from "../context/FormDataContext";
+import { useFormData } from "../../../context/FormDataContext";
 
 
 const SignOfDanger = () => {

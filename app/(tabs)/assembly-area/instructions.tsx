@@ -11,18 +11,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import CrossImage from '../assets/images/cross.png';
-import EditImage from '../assets/images/edit.png';
-import FireImage from '../assets/images/fire.png';
-import MediaImage from '../assets/images/media.png';
-import TickImage from '../assets/images/tick.png';
-import WheelChairImage from '../assets/images/wheelchair.png';
-import CustomButton from '../components/CustomButton';
-import CustomHeader from '../components/CustomHeader';
-import ValidationModal from '../components/ValidationModal';
-import { BASE_URL } from '../config';
-import { useAuth } from '../context/AuthContext';
-import { useFormData } from '../context/FormDataContext';
+import CrossImage from '../../../assets/images/cross.png';
+import EditImage from '../../../assets/images/edit.png';
+import FireImage from '../../../assets/images/fire.png';
+import MediaImage from '../../../assets/images/media.png';
+import TickImage from '../../../assets/images/tick.png';
+import WheelChairImage from '../../../assets/images/wheelchair.png';
+import CustomButton from '../../../components/CustomButton';
+import CustomHeader from '../../../components/CustomHeader';
+import ValidationModal from '../../../components/ValidationModal';
+import { BASE_URL } from '../../../config';
+import { useAuth } from '../../../context/AuthContext';
+import { useFormData } from '../../../context/FormDataContext';
 
 
 
@@ -41,10 +41,10 @@ const Instructions = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [selections, setSelections] = useState({
-    allClear: null,
-    refusals: null,
-    personWithDisability: null,
-    signOfDanger: null,
+    allClear: false,
+    refusals: false,
+    personWithDisability: false,
+    signOfDanger: false,
   });
   const {
     refusalsData,
@@ -93,20 +93,20 @@ const Instructions = () => {
           //   setData: setRefusalsData,
           //   onComplete: () => {}
           // }),
-          refusals: () => router.push('refusals'),
+          refusals: () => router.push('/(tabs)/assembly-area/refusals'),
 
           // personWithDisability: () => navigation.navigate('PersonWithDisability', {
           //   data: personWithDisabilityData,
           //   setData: setPersonWithDisabilityData,
           //   onComplete: () => {}
           // }),
-          personWithDisability: () => router.push('person-with-disability'),
+          personWithDisability: () => router.push('/(tabs)/assembly-area/person-with-disability'),
           // signOfDanger: () => router.push('SignOfDanger', {
           //   data: signOfDangerData,
           //   setData: setSignOfDangerData,
           //   onComplete: () => {}
           // })
-          signOfDanger: () => router.push('sign-of-danger'),
+          signOfDanger: () => router.push('/(tabs)/assembly-area/sign-of-danger'),
         };
         navigationMap[section]?.();
       }
@@ -210,7 +210,7 @@ const Instructions = () => {
     {
       title: 'Additional Details and Requests',
       image: EditImage,
-      onPress: () => router.push('additional-details')
+      onPress: () => router.push('/(tabs)/assembly-area/additional-details')
     },
     {
       title: 'Media Files',
@@ -221,7 +221,7 @@ const Instructions = () => {
       //   onComplete: () => {},
       //   incidentId: incidentId
       // })
-      onPress: () => router.push('media-files')
+      onPress: () => router.push('/(tabs)/assembly-area/media-files')
     },
   ];
 
@@ -286,7 +286,7 @@ const Instructions = () => {
           <CustomButton 
             title="SUBMIT"
             onPress={handleSubmit} 
-            // disabled={isSubmitting || !canSubmit}
+            disabled={isSubmitting || !canSubmit}
             loading={isSubmitting}
           />
         </View>

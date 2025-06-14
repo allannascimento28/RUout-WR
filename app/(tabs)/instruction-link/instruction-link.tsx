@@ -1,9 +1,9 @@
+import CustomHeader from '@/components/CustomHeader';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import SimpleLineIcons from '@expo/vector-icons/SimpleLineIcons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import CustomHeader from '../../components/CustomHeader';
 
 
 const InstructionLink = () => {

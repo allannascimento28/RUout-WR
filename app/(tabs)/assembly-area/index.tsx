@@ -2,8 +2,8 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import CustomHeader from '../../components/CustomHeader';
-import { useAuth, useLogout } from '../../context/AuthContext';
+import CustomHeader from '../../../components/CustomHeader';
+import { useAuth, useLogout } from '../../../context/AuthContext';
 
 type Props = {
 //   navigation: TabNavigation;
@@ -17,17 +17,17 @@ type ListItem = {
 };
 
 const imageList: any[] = [
-    require('../../assets/images/fireandsmoke.png'),
-    require('../../assets/images/bombThreat.png'),
-    require('../../assets/images/smellOfGas.png'),
-    require('../../assets/images/structuralDamage.png'),
-    require('../../assets/images/workplace.png'),
-    require('../../assets/images/stormDamage.png'),
-    require('../../assets/images/medical.png'),
-    require('../../assets/images/chemicalLeak.png'),
-    require('../../assets/images/externalEmergancy.png'),
-    require('../../assets/images/utilitiesOutrage.png'),
-    require('../../assets/images/exercise.png'),
+    require('../../../assets/images/fireandsmoke.png'),
+    require('../../../assets/images/bombThreat.png'),
+    require('../../../assets/images/smellOfGas.png'),
+    require('../../../assets/images/structuralDamage.png'),
+    require('../../../assets/images/workplace.png'),
+    require('../../../assets/images/stormDamage.png'),
+    require('../../../assets/images/medical.png'),
+    require('../../../assets/images/chemicalLeak.png'),
+    require('../../../assets/images/externalEmergancy.png'),
+    require('../../../assets/images/utilitiesOutrage.png'),
+    require('../../../assets/images/exercise.png'),
 ];
 
 const AssemblyArea = () => {
@@ -50,7 +50,7 @@ const AssemblyArea = () => {
             const mappedData: ListItem[] = authState.incidentTypes.map((item: any, index: number) => ({
                 id: item.id,
                 title: item.title || "No Title", // fallback title
-                image: imageList[index] || require('../../assets/images/tick.png'), // Fixed the path
+                image: imageList[index] || require('../../../assets/images/tick.png'), // Fixed the path
             }));
             console.log("mappedData is :: ", mappedData);
             setListData(mappedData);
@@ -69,7 +69,7 @@ const AssemblyArea = () => {
 
     const handleListItemPress = (item: ListItem) => {
         console.log("Selected Item :: ", item);
-        router.push(`/instructions?incidentId=${item.id}`);
+        router.push(`/assembly-area/instructions?incidentId=${item.id}`);
     };
 
     const renderItem = ({ item }: { item: ListItem }) => (

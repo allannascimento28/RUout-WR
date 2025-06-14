@@ -7,10 +7,10 @@ import {
   Keyboard,
   ScrollView,
 } from "react-native";
-import CustomHeader from "../components/CustomHeader";
-import CustomInput from "../components/CustomInput";
-import CustomButton from "../components/CustomButton";
-import { useFormData } from "../context/FormDataContext";
+import CustomHeader from "../../../components/CustomHeader";
+import CustomInput from "../../../components/CustomInput";
+import CustomButton from "../../../components/CustomButton";
+import { useFormData } from "../../../context/FormDataContext";
 import { useRouter } from "expo-router";
 
 const PersonWithDisability = () => {

@@ -7,7 +7,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-import CustomHeader from '../components/CustomHeader';
+import CustomHeader from '../../../components/CustomHeader';
 // import { useNavigation } from '@react-navigation/native';
 // import { RootStackNavigation } from '../navigation/types';
 import { useRouter } from 'expo-router';
@@ -29,7 +29,7 @@ const PreIncidentLinks = () => {
                 <TouchableOpacity
                  style={styles.downloadButton} 
                 //  onPress={() => navigation.navigate('InstructionLink')}
-                onPress={() => router.push('/instruction-link')}
+                onPress={() => router.push('/(tabs)/instruction-link/instruction-link')}
                  >
                     <Feather name="download" size={18} color="#3392CC" style={styles.icon} />
                     <Text style={styles.buttonText}>Instruction Link</Text>
@@ -45,7 +45,7 @@ const PreIncidentLinks = () => {
                 <TouchableOpacity 
                 style={styles.downloadButton} 
                 // onPress={() => navigation.navigate('ResponseHandout')}
-                onPress={() => router.push('/response-handout')}
+                onPress={() => router.push('/(tabs)/instruction-link/response-handout')}
                 >
                     <Feather name="download" size={18} color="#3392CC" style={styles.icon} />
                     <Text style={styles.buttonText}>Response Handouts</Text>
@@ -61,7 +61,7 @@ const PreIncidentLinks = () => {
                 <TouchableOpacity 
                 style={styles.downloadButton} 
                 // onPress={() => navigation.navigate('ResponseVideos')}
-                onPress={() => router.push('/response-videos')}
+                onPress={() => router.push('/(tabs)/instruction-link/response-videos')}
                 >
                     <Feather name="download" size={18} color="#3392CC" style={styles.icon} />
                     <Text style={styles.buttonText}>Response Videos</Text>

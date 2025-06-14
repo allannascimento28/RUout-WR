@@ -2,13 +2,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { AVPlaybackStatus, Video } from 'expo-av';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import CustomHeader from '../components/CustomHeader';
+import CustomHeader from '../../../components/CustomHeader';
 
 const ResponseVideos = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [status, setStatus] = useState<AVPlaybackStatus>({} as AVPlaybackStatus);
 
-  const videoUri = require('../assets/images/sampleVideo.mp4'); 
+  const videoUri = require('../../../assets/images/sampleVideo.mp4'); 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
   };
