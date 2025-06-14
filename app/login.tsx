@@ -18,12 +18,10 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import BottomImage from "../assets/images/loginBottomImage.png";
 import { BASE_URL } from "../config";
-import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const router = useRouter();
   const { width, height } = useWindowDimensions();
-  const { authState, updateAuthState } = useAuth();
 
   const isLargeScreen = width > 768;
   const isExtraLargeScreen = width > 1200;
@@ -60,12 +58,7 @@ const Login = () => {
           title: item.incidentTypeSourceId,
         }));                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
 
-        updateAuthState({
-          authToken: token,
-          incidentTypes: incidentTypesId,
-        });
         setLoading(false);
-        // navigation.navigate("Tabs");
         router.push("/(tabs)");
         
       } catch (error: any) {

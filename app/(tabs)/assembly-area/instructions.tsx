@@ -1,9 +1,8 @@
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import axios from 'axios';
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -13,7 +12,7 @@ import {
 } from 'react-native';
 import CrossImage from '../../../assets/images/cross.png';
 import EditImage from '../../../assets/images/edit.png';
-import FireImage from '../../../assets/images/fire.png';
+import FireImage from '../../../assets/images/media.png';
 import MediaImage from '../../../assets/images/media.png';
 import TickImage from '../../../assets/images/tick.png';
 import WheelChairImage from '../../../assets/images/wheelchair.png';
@@ -21,8 +20,9 @@ import CustomButton from '../../../components/CustomButton';
 import CustomHeader from '../../../components/CustomHeader';
 import ValidationModal from '../../../components/ValidationModal';
 import { BASE_URL } from '../../../config';
-import { useAuth } from '../../../context/AuthContext';
 import { useFormData } from '../../../context/FormDataContext';
+import { getDeeplinkParams } from '@/utils/deepLinkParams';
+import AlertModal from '@/components/AlertModal';
 
 
 
@@ -33,12 +33,20 @@ interface AudioRecording {
   duration: number;
 }
 
+type SelectionKeys = 'allClear' | 'refusals' | 'personWithDisability' | 'signOfDanger';
+
 const Instructions = () => {
   const { incidentId } = useLocalSearchParams();
   const router = useRouter();
-  const { authState } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deepLinkParams, setDeepLinkParams] = useState<Record<string, string>>({
+    level: '',
+    area: '',
+    pin: '',
+    qr: '',
+    segments: '',
+  });
 
   const [selections, setSelections] = useState({
     allClear: false,
@@ -83,7 +91,6 @@ const Instructions = () => {
       setSelections(prev => ({
         ...prev,
         [section]: value,
-        ...(section !== 'allClear' && { allClear: false })
       }));
 
       if (value && section !== 'allClear') {
@@ -113,13 +120,16 @@ const Instructions = () => {
     }
   };
 
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [errorTitle, setErrorTitle] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleSubmit = async () => {
-    // console.log("Audio Recordings:", audioRecordings)
-    // console.log("sign of dangerrrrr : ", signOfDangerData)
-    console.log("Imagea arege :: ", images)
+    console.log("Images are :: ", images)
     
     setIsSubmitting(true);
-    const token = authState.authToken;
+    // const token = authState.authToken;
+    const token = ''
     const formData = new FormData();
 
     formData.append('refusal[status]', selections.refusals ? 'true' : 'false');
@@ -160,7 +170,10 @@ const Instructions = () => {
         await Promise.all(promises);
       } catch (error) {
         console.error('Error processing audio recordings:', error);
-        Alert.alert('Error', 'Failed to process audio recordings');
+        setErrorTitle('Error');
+        setErrorMessage('Failed to process audio recordings');
+        setErrorModalVisible(true);
+        setIsSubmitting(false);
         return;
       }
     }
@@ -169,14 +182,19 @@ const Instructions = () => {
       for (const image of images) {
         const response = await fetch(image.uri);
         const blob = await response.blob();
-        formData.append('media[image][]', blob, image.uri.split('/').pop());
+        formData.append('image', blob, image.uri.split('/').pop());
       }
     } catch (error) {
       console.error('Error processing images:', error);
+      setErrorTitle('Error');
+      setErrorMessage('Failed to process images');
+      setErrorModalVisible(true);
+      setIsSubmitting(false);
+      return;
     }
 
     try {
-      const response = await axios.put(`${BASE_URL}/user/incident-type/${incidentId}`, formData, {
+      const response = await axios.put(`${BASE_URL}/building/incident/${deepLinkParams.pin}/${deepLinkParams.qr}/${incidentId}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -184,16 +202,19 @@ const Instructions = () => {
       });
 
       if (response.status === 200) {
-      
         console.log("\n\n\n\n Response of the appppiiii  : ", response.data)
         setIsModalVisible(true);
         clearData();
       } else {
-        Alert.alert('Error', `Server responded with status ${response.status}`);
+        setErrorTitle('Submission Failed');
+        setErrorMessage(`Server responded with status ${response.status}`);
+        setErrorModalVisible(true);
       }
     } catch (error) {
       console.error('Submit error:', error);
-      Alert.alert('Error', 'Something went wrong during submission');
+      setErrorTitle('Error');
+      setErrorMessage(`${error.response.data?.message || 'An error occurred while submitting the form.'}`);
+      setErrorModalVisible(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -225,15 +246,25 @@ const Instructions = () => {
     },
   ];
 
+  useEffect(() => {
+    const fetchDeeplinkParams = async () => {
+      const params = await getDeeplinkParams();
+      setDeepLinkParams(params);
+      console.log("Deeplink Params in Instructions ::", params.level);
+    }
+    fetchDeeplinkParams();
+  }, []);
+
   return (
     <View style={styles.screen}>
-      <CustomHeader title="Level 1 South 1" />
+      <CustomHeader title={`${deepLinkParams.level} ${deepLinkParams.area}`} />
       <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 100 }}>
-        
+          
         {buttonItems.map((item) => {
-          const selection = selections[item.key];
+          const selection = selections[item.key as SelectionKeys];
           const yesSelected = selection === true;
           const noSelected = selection === false;
+          const isAllClear = item.key === 'allClear';
           
           return (
             <View style={styles.container} key={item.key}>
@@ -246,7 +277,10 @@ const Instructions = () => {
                   onPress={() => handleButtonPress(item.key, true)}
                   style={[
                     styles.yesButton,
-                    { backgroundColor: yesSelected ? '#FF1C1C' : '#fe8d8d' },
+                    { backgroundColor: isAllClear 
+                      ? (yesSelected ? '#34C759' : '#34C75980') 
+                      : (yesSelected ? '#FF1C1C' : '#fe8d8d') 
+                    },
                     noSelected && styles.disabledButton
                   ]}
                 >
@@ -256,7 +290,9 @@ const Instructions = () => {
                   onPress={() => handleButtonPress(item.key, false)}
                   style={[
                     styles.noButton,
-                    noSelected && styles.activeNoButton
+                    isAllClear 
+                      ? { backgroundColor: noSelected ? '#FF1C1C' : '#fe8d8d' }
+                      : noSelected && styles.activeNoButton
                   ]}
                 >
                   <Text style={styles.buttonText}>No</Text>
@@ -296,6 +332,22 @@ const Instructions = () => {
           onClose={() => setIsModalVisible(false)} 
           onDownload={() => setIsModalVisible(false)} 
           navigation={() => {}}
+        />
+        
+        {/* Error alert modal */}
+        <AlertModal
+          visible={errorModalVisible}
+          title={errorTitle}
+          message={errorMessage}
+          type="error"
+          buttons={[
+            {
+              text: "OK",
+              onPress: () => setErrorModalVisible(false),
+              style: "default"
+            }
+          ]}
+          onClose={() => setErrorModalVisible(false)}
         />
       </ScrollView>
     </View>

@@ -1,7 +1,6 @@
 import { Stack } from "expo-router";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import Header from "../components/Header";
-import { AuthProvider, useAuth } from "../context/AuthContext";
 import { FormDataProvider } from "../context/FormDataContext";
 
 function LoadingScreen() {
@@ -13,23 +12,16 @@ function LoadingScreen() {
 }
 
 export default function RootLayout() {
-  // const { isLoading } = useAuth();
 
-  // if (isLoading) {
-  //   return <LoadingScreen />;
-  // }
-
-  const { authState } = useAuth();
   return (
-    <AuthProvider>
-      <FormDataProvider>
+    <FormDataProvider>
       <Stack
-        initialRouteName= {!authState.authToken ? "login" : "(tabs)"}
+        initialRouteName= "(tabs)"
         screenOptions={{
           header: () => <Header />,
         }}
       >
-        <Stack.Screen name="login" options={{ headerShown: false }} />
+        <Stack.Screen name="[...segment]" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         {/* <Stack.Screen
           name="assembly-area"
@@ -74,8 +66,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
-        </FormDataProvider>
-    </AuthProvider>
+    </FormDataProvider>
   );
 }
 

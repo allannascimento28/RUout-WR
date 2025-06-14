@@ -3,17 +3,23 @@ import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'rea
 
 
 import { useRouter } from 'expo-router';
+import { getDeeplinkParams } from '../../utils/deepLinkParams';
 
 const Home = () => {
-  // const navigation = useNavigation<RootStackNavigation>();
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const [activating, setActivating] = useState(false);
   const [navigatingToPreIncident, setNavigatingToPreIncident] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    async function checkDeepLinks() {
+      console.log("Deep Link Params in Home Screen ::", await getDeeplinkParams());
+    }
+    checkDeepLinks();
+  }, []);
+
+  useEffect(() => {
     async function loadResources() {
-      // await loadFonts();
       setFontsLoaded(true);
     }
     loadResources();
@@ -22,7 +28,6 @@ const Home = () => {
   const handleActivate = () => {
     setActivating(true);
     setTimeout(() => {
-      // navigation.navigate('AssemblyArea');
       router.push('/(tabs)/assembly-area');
       setActivating(false);
     }, 300);

@@ -3,7 +3,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import CustomHeader from '../../../components/CustomHeader';
-import { useAuth, useLogout } from '../../../context/AuthContext';
+import { IncidentTypeSource } from '@/constants/IncidentTypeSource';
 
 type Props = {
 //   navigation: TabNavigation;
@@ -15,6 +15,21 @@ type ListItem = {
     title: string;
     image: any;
 };
+
+const incidentTypeSourceIds = [
+    'fire', 
+    'bomb', 
+    'smell', 
+    'structural', 
+    'workplace', 
+    'storm', 
+    'medical', 
+    'chemical', 
+    'external', 
+    'utilities', 
+    'exercise', 
+    'test'
+];
 
 const imageList: any[] = [
     require('../../../assets/images/fireandsmoke.png'),
@@ -28,11 +43,10 @@ const imageList: any[] = [
     require('../../../assets/images/externalEmergancy.png'),
     require('../../../assets/images/utilitiesOutrage.png'),
     require('../../../assets/images/exercise.png'),
+    require('../../../assets/images/testIncidentSource.png'),
 ];
 
 const AssemblyArea = () => {
-    const { authState } = useAuth();
-    const logout = useLogout(); // Call the hook at the top level
     const [listData, setListData] = useState<ListItem[]>([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
@@ -45,9 +59,8 @@ const AssemblyArea = () => {
         setLoading(true);
 
         try {
-            console.log("incident Types from authState ::", authState.incidentTypes);
 
-            const mappedData: ListItem[] = authState.incidentTypes.map((item: any, index: number) => ({
+            const mappedData: ListItem[] = IncidentTypeSource.map((item: any, index: number) => ({
                 id: item.id,
                 title: item.title || "No Title", // fallback title
                 image: imageList[index] || require('../../../assets/images/tick.png'), // Fixed the path
@@ -67,13 +80,13 @@ const AssemblyArea = () => {
         }
     }
 
-    const handleListItemPress = (item: ListItem) => {
+    const handleListItemPress = (item: ListItem, index: number) => {
         console.log("Selected Item :: ", item);
-        router.push(`/assembly-area/instructions?incidentId=${item.id}`);
+        router.push(`/assembly-area/instructions?incidentId=${incidentTypeSourceIds[index]}`);
     };
 
-    const renderItem = ({ item }: { item: ListItem }) => (
-        <TouchableOpacity style={styles.listItem} onPress={() => handleListItemPress(item)}>
+    const renderItem = ({ item, index }: { item: ListItem, index: number }) => (
+        <TouchableOpacity style={styles.listItem} onPress={() => handleListItemPress(item, index)}>
             <View style={styles.itemContent}>
                 <Image source={item.image} style={styles.itemImage} />
                 <Text style={styles.itemText}>{item.title}</Text>
